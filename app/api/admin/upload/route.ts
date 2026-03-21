@@ -23,6 +23,8 @@ async function checkAdmin(req: Request): Promise<boolean> {
     return !!profile?.is_admin;
 }
 
+export const maxDuration = 300; // 5 minutes
+
 export async function POST(req: Request) {
     if (!(await checkAdmin(req))) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -42,17 +44,28 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'student_type must be C or D' }, { status: 400 });
         }
 
+        console.log(`[Admin Upload] Title: ${title}, Type: ${student_type}, File: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+
         const supabase = getServiceSupabase();
 
         // 1. Upload PDF to Supabase Storage
         const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
         const fileBuffer = await file.arrayBuffer();
+
+        console.log(`[Admin Upload] Uploading to Storage: ${fileName}...`);
         const { error: uploadErr } = await supabase.storage
             .from('courses')
-            .upload(fileName, fileBuffer, { contentType: 'application/pdf' });
+            .upload(fileName, fileBuffer, {
+                contentType: 'application/pdf',
+                upsert: true
+            });
 
-        if (uploadErr) throw new Error(`Storage upload failed: ${uploadErr.message}`);
+        if (uploadErr) {
+            console.error('[Admin Upload] Storage Error:', uploadErr);
+            throw new Error(`Storage upload failed: ${uploadErr.message}`);
+        }
 
+        console.log('[Admin Upload] Storage Upload Successful.');
         const pdfUrl = supabase.storage.from('courses').getPublicUrl(fileName).data.publicUrl;
 
         // 2. Insert course into DB
