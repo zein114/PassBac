@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, Zap, Loader2 } from 'lucide-react';
+import { Mail, Lock, Zap, Loader2, Eye, EyeOff } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +13,7 @@ export default function LoginForm() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
     const supabase = createClient();
 
@@ -72,13 +73,20 @@ export default function LoginForm() {
                             <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
+                            className="block w-full pl-11 pr-12 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
                             placeholder="••••••••"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-indigo-600 transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
                     </div>
                 </div>
 
