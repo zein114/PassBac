@@ -16,6 +16,7 @@ function getOpenAI(): OpenAI {
 
 export async function generateEmbedding(text: string): Promise<number[]> {
     const openai = getOpenAI();
+    console.log(`[DEBUG-EMBED] Generating single embedding (${text.length} chars)...`);
     const response = await openai.embeddings.create({
         model: 'text-embedding-3-small',
         input: text.replace(/\n/g, ' '),
@@ -29,9 +30,11 @@ export async function generateEmbedding(text: string): Promise<number[]> {
  */
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
     const openai = getOpenAI();
+    console.log(`[DEBUG-EMBED] Generating batch of ${texts.length} embeddings...`);
     const response = await openai.embeddings.create({
         model: 'text-embedding-3-small',
         input: texts.map(t => t.replace(/\n/g, ' ')),
     });
+    console.log(`[DEBUG-EMBED] Batch SUCCESS: Received ${response.data.length} embeddings.`);
     return response.data.map(d => d.embedding);
 }

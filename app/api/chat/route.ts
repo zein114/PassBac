@@ -48,7 +48,14 @@ export async function POST(req: Request) {
 
     console.log(`[Chat] RAG retrieved ${chunks.length} chunks for "${lastMessage.content.slice(0, 30)}..."`);
 
-    const contextText = chunks.map((c) => c.content).join('\n\n');
+    let contextText = chunks.map((c) => c.content).join('\n\n');
+
+    // Prevent 413 "Request too large" with Groq free tier limit of 6000 TPM
+    const maxChars = 12000;
+    if (contextText.length > maxChars) {
+      console.log(`[Chat] Truncating context from ${contextText.length} to ${maxChars} chars.`);
+      contextText = contextText.slice(0, maxChars);
+    }
 
     const systemPrompt = `You are BacTutor, an expert teacher for Baccalaureate Series ${studentType || 'General'} students.
 IMPORTANT: Respond ONLY in ${language}.

@@ -7,6 +7,7 @@ const withNextIntl = createNextIntlPlugin(
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ['pdf-parse'],
   typescript: {
     ignoreBuildErrors: true,
   }

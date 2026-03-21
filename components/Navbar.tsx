@@ -2,7 +2,7 @@
 
 import { Link, usePathname } from '../i18n/navigation';
 import { useAuth } from './AuthProvider';
-import { LogOut, Languages, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 
@@ -43,9 +43,6 @@ export function Navbar({ locale }: { locale: string }) {
     if (profile?.is_admin) {
         links.push({ href: '/admin', label: t('admin') });
     }
-
-    const nextLocale = locale === 'fr' ? 'ar' : locale === 'ar' ? 'en' : 'fr';
-    const langLabel = nextLocale.toUpperCase();
 
     return (
         <header
@@ -89,16 +86,6 @@ export function Navbar({ locale }: { locale: string }) {
 
                 {/* Right side tools */}
                 <div className="flex items-center gap-2">
-                    {/* Language Toggle */}
-                    <Link
-                        href={pathname}
-                        locale={nextLocale}
-                        className="w-10 h-10 flex items-center justify-center text-xs font-black text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors border border-indigo-100/50"
-                        title={langLabel}
-                    >
-                        {langLabel}
-                    </Link>
-
                     {/* Minimalist User Avatar */}
                     <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold shadow-inner">
                         {user.email?.charAt(0).toUpperCase()}

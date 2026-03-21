@@ -1,52 +1,67 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 export async function extractTextFromPDFBuffer(buffer: Buffer): Promise<string> {
     try {
-        console.log('[PDF] Extracting text using pdfjs-dist (dynamic legacy import)...');
+        console.log('[DEBUG-PDF] Starting extraction with basic pdf-parse...');
 
-        // Polyfill browser globals for pdfjs-dist in Node environment BEFORE importing
-        if (typeof (global as any).DOMMatrix === 'undefined') (global as any).DOMMatrix = class { };
-        if (typeof (global as any).ImageData === 'undefined') (global as any).ImageData = class { };
-        if (typeof (global as any).Path2D === 'undefined') (global as any).Path2D = class { };
+        // Use a standard require to avoid Next.js ESM dynamic import bugs
+        const pdfParse = require('pdf-parse');
 
-        // Dynamic import the legacy build to ensure polyfills are in place first
-        const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        // pdf-parse sometimes exports differently depending on the bundler
+        // It might be the function itself, or it might have a .default property
+        let extractedText = '';
 
-        const data = new Uint8Array(buffer);
-        const loadingTask = pdfjs.getDocument({
-            data,
-            disableRange: true,
-            disableStream: true
-        });
+        if (pdfParse.PDFParse) {
+            console.log('[DEBUG-PDF] Detected PDFParse class structure, instantiating...');
+            const parser = new pdfParse.PDFParse({ data: buffer });
+            const result = await parser.getText();
+            extractedText = result.text || '';
+        } else {
+            console.log('[DEBUG-PDF] Detected standard pdf-parse function...');
+            const parseFunc = typeof pdfParse === 'function' ? pdfParse : pdfParse.default;
 
-        const pdf = await loadingTask.promise;
-        let fullText = "";
+            if (!parseFunc || typeof parseFunc !== 'function') {
+                throw new Error("Could not resolve a valid parsing function/class from pdf-parse");
+            }
 
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const pageText = content.items
-                .map((item: any) => item.str)
-                .join(" ");
-            fullText += pageText + "\n";
+            const data = await parseFunc(buffer);
+            extractedText = data?.text || '';
         }
 
-        console.log(`[PDF] Extracted ${fullText.length} characters from ${pdf.numPages} pages.`);
-        return fullText;
-    } catch (error) {
-        console.error('Error parsing PDF with pdfjs-dist:', error);
-        throw new Error('Failed to extract text from PDF');
+        console.log(`[DEBUG-PDF] SUCCESS: Extracted ${extractedText.length} characters.`);
+
+        if (extractedText.trim().length === 0) {
+            console.warn('[DEBUG-PDF] WARNING: Extracted text is empty. PDF might be scanned or empty.');
+        }
+
+        return extractedText;
+
+    } catch (error: any) {
+        console.error('[DEBUG-PDF] ERROR during extraction:', error.message);
+        throw new Error(`Failed to extract text from PDF: ${error.message}`);
     }
 }
 
 export function chunkText(text: string, chunkSize: number = 800, overlap: number = 100): string[] {
+    if (!text || text.trim().length === 0) return [];
+
     const words = text.split(/\s+/);
     const chunks: string[] = [];
     let start = 0;
 
     while (start < words.length) {
         const chunk = words.slice(start, start + chunkSize).join(' ');
-        if (chunk.trim()) chunks.push(chunk.trim());
+        const trimmedChunk = chunk.trim();
+
+        // Only add if chunk has meaningful content
+        if (trimmedChunk.length > 10) {
+            chunks.push(trimmedChunk);
+        }
+
         start += chunkSize - overlap;
     }
 
+    console.log(`[DEBUG-CHUNK] Created ${chunks.length} chunks from ${words.length} words.`);
     return chunks;
 }
