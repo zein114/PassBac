@@ -13,6 +13,11 @@ const intlMiddleware = createIntlMiddleware({
 })
 
 export async function proxy(request: NextRequest) {
+    // 0. Skip next-intl for API routes to avoid locale prefixing
+    if (request.nextUrl.pathname.startsWith('/api')) {
+        return await updateSession(request)
+    }
+
     // 1. Handle locale routing
     const response = intlMiddleware(request)
 
