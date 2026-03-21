@@ -161,32 +161,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </div>
-                                    Aller au planning
-                                </Link>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="space-y-3">
-                                    {todaySessions.map(session => (
-                                        <div key={session.id} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                                            <div className="flex-shrink-0">
-                                                {session.status === 'completed' ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Clock className="w-5 h-5 text-orange-400" />}
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className={`text-sm font-bold truncate ${session.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-800'}`}>{session.title}</p>
-                                                <p className="text-[10px] text-slate-500 font-medium capitalize">{session.subject} • {session.start_time.slice(0, 5)}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <Link href="/planner" className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors border-t border-slate-100 mt-2">
-                                    Voir tout le planning <ChevronRight className="w-4 h-4" />
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
     );
 }

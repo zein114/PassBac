@@ -33,11 +33,11 @@ export async function updateSession(request: NextRequest, response?: NextRespons
 
     // Helper to check paths regardless of locale prefix
     const path = request.nextUrl.pathname
-    const isAuthRoute = path.match(/^\/(fr|ar)\/(login|register)/) || path.startsWith('/login') || path.startsWith('/register')
-    const isAdminRoute = path.match(/^\/(fr|ar)\/admin/) || path.startsWith('/admin')
-    const isDashboardRoute = path.match(/^\/(fr|ar)\/dashboard/) || path.startsWith('/dashboard')
+    const isAuthRoute = path.match(/^\/(fr|ar|en)\/(login|register)/) || path.startsWith('/login') || path.startsWith('/register')
+    const isAdminRoute = path.match(/^\/(fr|ar|en)\/admin/) || path.startsWith('/admin')
+    const isDashboardRoute = path.match(/^\/(fr|ar|en)\/dashboard/) || path.startsWith('/dashboard')
     const isApiRoute = path.startsWith('/api/')
-    const isRoot = path === '/' || path === '/fr' || path === '/ar' || path === '/fr/' || path === '/ar/'
+    const isRoot = path === '/' || path.match(/^\/(fr|ar|en)(\/)?$/)
 
     const isPublicRoute = isRoot || isAuthRoute || isApiRoute
 

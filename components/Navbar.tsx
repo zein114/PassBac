@@ -44,8 +44,8 @@ export function Navbar({ locale }: { locale: string }) {
         links.push({ href: '/admin', label: t('admin') });
     }
 
-    const otherLocale = locale === 'fr' ? 'ar' : 'fr';
-    const langLabel = locale === 'fr' ? 'AR' : 'FR';
+    const nextLocale = locale === 'fr' ? 'ar' : locale === 'ar' ? 'en' : 'fr';
+    const langLabel = nextLocale.toUpperCase();
 
     return (
         <header
@@ -58,8 +58,8 @@ export function Navbar({ locale }: { locale: string }) {
                     <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-1.5">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                            src="@public/logo.png"
-                            alt="Logo"
+                            src="/logo.png"
+                            alt={t('title')}
                             className="w-full h-full object-cover rounded-full"
                         />
                     </div>
@@ -92,7 +92,7 @@ export function Navbar({ locale }: { locale: string }) {
                     {/* Language Toggle */}
                     <Link
                         href={pathname}
-                        locale={otherLocale}
+                        locale={nextLocale}
                         className="w-10 h-10 flex items-center justify-center text-xs font-black text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors border border-indigo-100/50"
                         title={langLabel}
                     >
@@ -143,6 +143,16 @@ export function Navbar({ locale }: { locale: string }) {
                                 </Link>
                             );
                         })}
+                        <button
+                            onClick={() => {
+                                setIsMenuOpen(false);
+                                signOut();
+                            }}
+                            className="px-4 py-3 rounded-2xl text-sm font-bold flex items-center gap-3 text-red-600 hover:bg-red-50 transition-all mt-2 border border-red-100/50"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            <span>{t('logout')}</span>
+                        </button>
                     </div>
                 </div>
             )}
