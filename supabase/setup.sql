@@ -17,8 +17,34 @@ create table if not exists profiles (
   created_at timestamp with time zone default timezone('utc', now()) not null
 );
 
+-- Function to handle new user profile creation
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, student_type, is_admin)
+  values (
+    new.id,
+    new.email,
+    coalesce(new.raw_user_meta_data->>'student_type', 'C'), -- Default to C if not provided
+    false
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to call the function on signup
+create or replace trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
 -- RLS for profiles
 alter table profiles enable row level security;
+
+do $$ begin
+  drop policy if exists "Users can read own profile" on profiles;
+  drop policy if exists "Users can insert own profile" on profiles;
+  drop policy if exists "Users can update own profile" on profiles;
+end $$;
 
 create policy "Users can read own profile"
   on profiles for select
@@ -44,14 +70,18 @@ create table if not exists courses (
   created_at timestamp with time zone default timezone('utc', now()) not null
 );
 
--- RLS for courses (students read their own type only)
+-- RLS for courses
 alter table courses enable row level security;
+
+do $$ begin
+  drop policy if exists "All authenticated users can read courses by type" on courses;
+  drop policy if exists "Admins can manage courses" on courses;
+end $$;
 
 create policy "All authenticated users can read courses by type"
   on courses for select
   using (auth.role() = 'authenticated');
 
--- Only admins can insert/update/delete courses
 create policy "Admins can manage courses"
   on courses for all
   using (
@@ -75,6 +105,11 @@ create table if not exists embeddings (
 
 -- RLS for embeddings
 alter table embeddings enable row level security;
+
+do $$ begin
+  drop policy if exists "Authenticated users can read embeddings" on embeddings;
+  drop policy if exists "Admins can manage embeddings" on embeddings;
+end $$;
 
 create policy "Authenticated users can read embeddings"
   on embeddings for select
@@ -105,6 +140,13 @@ create table if not exists progress (
 
 -- RLS for progress
 alter table progress enable row level security;
+
+do $$ begin
+  drop policy if exists "Users can read own progress" on progress;
+  drop policy if exists "Users can update own progress" on progress;
+  drop policy if exists "Users can modify own progress" on progress;
+  drop policy if exists "Admins can read all progress" on progress;
+end $$;
 
 create policy "Users can read own progress"
   on progress for select
@@ -164,6 +206,11 @@ $$;
 insert into storage.buckets (id, name, public)
 values ('courses', 'courses', true)
 on conflict (id) do nothing;
+
+do $$ begin
+  drop policy if exists "Public read access to course PDFs" on storage.objects;
+  drop policy if exists "Service role can upload PDFs" on storage.objects;
+end $$;
 
 create policy "Public read access to course PDFs"
   on storage.objects for select

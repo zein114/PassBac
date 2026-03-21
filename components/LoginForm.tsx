@@ -18,7 +18,7 @@ export default function LoginForm() {
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error, data } = await supabase.auth.signInWithPassword({
             email: demoEmail || email,
             password: demoPassword || password,
         });
@@ -27,76 +27,97 @@ export default function LoginForm() {
             setError(error.message);
             setLoading(false);
         } else {
+            // Check for 'next' param in URL
+            const searchParams = new URLSearchParams(window.location.search);
+            const next = searchParams.get('next') || '/dashboard';
             router.refresh();
-            router.push('/dashboard');
+            router.push(next);
         }
     };
 
     return (
-        <div className="w-full space-y-4">
-            <form className="space-y-4" onSubmit={handleLogin}>
+        <div className="w-full space-y-6">
+            <form className="space-y-5" onSubmit={handleLogin}>
                 {/* Email */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                        </div>
                         <input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@example.com"
-                            className="input-modern pl-10"
+                            className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
+                            placeholder="name@example.com"
                         />
                     </div>
                 </div>
 
                 {/* Password */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    <div className="flex items-center justify-between mb-2">
+                        <label className="block text-sm font-semibold text-gray-700">Password</label>
+                        <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
+                            Forgot?
+                        </button>
+                    </div>
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                        </div>
                         <input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
                             placeholder="••••••••"
-                            className="input-modern pl-10"
                         />
                     </div>
                 </div>
 
                 {/* Error message */}
                 {error && (
-                    <div className="text-red-600 text-sm font-medium bg-red-50 px-4 py-3 rounded-xl border border-red-200">
+                    <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-red-50 border border-red-100 text-red-600 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-600" />
                         {error}
                     </div>
                 )}
 
-                <button type="submit" disabled={loading} className="btn-primary flex items-center justify-center gap-2">
-                    {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Signing in...</> : 'Sign in'}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                        <>Sign in to Dashboard</>
+                    )}
                 </button>
             </form>
 
-            {/* Divider */}
-            <div className="relative my-2">
+            <div className="relative py-2">
                 <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-gray-200" />
+                    <div className="w-full border-t border-gray-100"></div>
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-3 text-gray-400 font-medium">Or</span>
+                    <span className="bg-white px-3 text-gray-400 font-bold tracking-widest">OR</span>
                 </div>
             </div>
 
-            {/* Demo button */}
             <button
                 onClick={() => handleLogin(undefined, 'demo@test.com', 'demo')}
                 disabled={loading}
-                className="btn-secondary flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-white border-2 border-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-indigo-100 hover:text-indigo-600 transition-all flex items-center justify-center gap-2 group transform active:scale-[0.98]"
             >
-                <Zap className="w-4 h-4 text-yellow-500" />
-                Login as Demo
+                <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                    <Zap className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                </div>
+                Continue with Demo Access
             </button>
         </div>
     );

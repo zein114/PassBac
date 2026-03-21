@@ -22,8 +22,14 @@ export default function RegisterForm() {
         setError(null);
         setSuccess(null);
 
-        // 1. Sign up the user
-        const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+        // 1. Sign up the user (metadata is used by the database trigger for profile creation)
+        const { data, error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { student_type: studentType }
+            }
+        });
 
         if (signUpError) {
             setError(signUpError.message);
@@ -31,53 +37,41 @@ export default function RegisterForm() {
             return;
         }
 
-        // 2. Insert profile with student_type
-        if (data.user) {
-            const { error: profileError } = await supabase.from('profiles').insert({
-                id: data.user.id,
-                email: data.user.email,
-                student_type: studentType,
-            });
-
-            if (profileError) {
-                setError('Account created but failed to save profile. Please contact support.');
-                setLoading(false);
-                return;
-            }
-        }
-
+        // 2. Profile is now handled by the database trigger!
         setSuccess('Account created! Redirecting to sign in...');
         setLoading(false);
         setTimeout(() => router.push('/login'), 2000);
     };
 
     return (
-        <div className="w-full">
-            <form className="space-y-5" onSubmit={handleRegister}>
+        <div className="w-full max-w-md mx-auto">
+            <form className="space-y-6" onSubmit={handleRegister}>
                 {/* Bac Type selector */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Baccalaureate Type <span className="text-red-500">*</span>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        Choose your Baccalaureate Profile
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                         {(['C', 'D'] as const).map((type) => (
                             <button
                                 key={type}
                                 type="button"
                                 onClick={() => setStudentType(type)}
-                                className={`relative flex flex-col items-center gap-1.5 p-4 rounded-2xl border-2 transition-all cursor-pointer ${studentType === type
-                                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-sm'
-                                        : 'border-gray-200 hover:border-indigo-300 text-gray-600'
+                                className={`group relative flex flex-col items-center gap-2 p-5 rounded-3xl border-2 transition-all duration-300 ${studentType === type
+                                    ? 'border-indigo-600 bg-indigo-50/50 shadow-md shadow-indigo-100 ring-4 ring-indigo-500/10'
+                                    : 'border-gray-100 hover:border-indigo-300 hover:bg-gray-50/50 text-gray-500'
                                     }`}
                             >
-                                <GraduationCap className={`w-6 h-6 ${studentType === type ? 'text-indigo-500' : 'text-gray-400'}`} />
-                                <span className="font-bold text-lg">Bac {type}</span>
-                                <span className="text-xs text-center opacity-70">
-                                    {type === 'C' ? 'Mathematics & Physics' : 'Biology & Chemistry'}
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${studentType === type ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-indigo-100 group-hover:text-indigo-500'}`}>
+                                    <GraduationCap className="w-6 h-6" />
+                                </div>
+                                <span className={`font-bold text-lg ${studentType === type ? 'text-gray-900' : 'text-gray-600'}`}>Bac {type}</span>
+                                <span className="text-[10px] text-center font-medium opacity-60 leading-tight px-1">
+                                    {type === 'C' ? 'Math & Physics' : 'Bio & Chemistry'}
                                 </span>
                                 {studentType === type && (
-                                    <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center">
-                                        <div className="w-2 h-2 bg-white rounded-full" />
+                                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-indigo-600 border-4 border-white flex items-center justify-center shadow-lg animate-in zoom-in-50 duration-300">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
                                     </div>
                                 )}
                             </button>
@@ -85,52 +79,68 @@ export default function RegisterForm() {
                     </div>
                 </div>
 
-                {/* Email */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                        <input
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@example.com"
-                            className="input-modern pl-10"
-                        />
+                <div className="space-y-4">
+                    {/* Email */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">Email</label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                            </div>
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
+                                placeholder="name@example.com"
+                            />
+                        </div>
                     </div>
-                </div>
 
-                {/* Password */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                        <input
-                            type="password"
-                            required
-                            minLength={6}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Min. 6 characters"
-                            className="input-modern pl-10"
-                        />
+                    {/* Password */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">Password</label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                            </div>
+                            <input
+                                type="password"
+                                required
+                                minLength={6}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
+                                placeholder="Min. 6 characters"
+                            />
+                        </div>
                     </div>
                 </div>
 
                 {error && (
-                    <div className="text-red-600 text-sm font-medium bg-red-50 px-4 py-3 rounded-xl border border-red-200">
+                    <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-red-50 border border-red-100 text-red-600 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-600" />
                         {error}
                     </div>
                 )}
                 {success && (
-                    <div className="text-green-700 text-sm font-medium bg-green-50 px-4 py-3 rounded-xl border border-green-200">
+                    <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-green-50 border border-green-100 text-green-700 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-600" />
                         {success}
                     </div>
                 )}
 
-                <button type="submit" disabled={loading || !!success} className="btn-primary flex items-center justify-center gap-2">
-                    {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Creating account...</> : 'Create account'}
+                <button
+                    type="submit"
+                    disabled={loading || !!success}
+                    className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                        <>Start Learning Now</>
+                    )}
                 </button>
             </form>
         </div>

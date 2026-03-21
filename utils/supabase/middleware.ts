@@ -44,7 +44,9 @@ export async function updateSession(request: NextRequest) {
     if (!user && !isPublicRoute && !isAdminRoute) {
         // If user is not logged in, redirect to login page for protected routes
         const url = request.nextUrl.clone()
+        const redirectTo = url.pathname + url.search
         url.pathname = '/login'
+        url.search = `?next=${encodeURIComponent(redirectTo)}`
         return NextResponse.redirect(url)
     }
 
@@ -52,7 +54,9 @@ export async function updateSession(request: NextRequest) {
     if (isAdminRoute) {
         if (!user) {
             const url = request.nextUrl.clone()
+            const redirectTo = url.pathname + url.search
             url.pathname = '/login'
+            url.search = `?next=${encodeURIComponent(redirectTo)}`
             return NextResponse.redirect(url)
         }
 
