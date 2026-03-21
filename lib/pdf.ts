@@ -13,9 +13,6 @@ export async function extractTextFromPDFBuffer(buffer: Buffer): Promise<string> 
         const data = new Uint8Array(buffer);
         const loadingTask = pdfjs.getDocument({
             data,
-            disableWorker: true, // Force main-thread parsing in Node environment
-            useWorkerFetch: false,
-            isEvalSupported: false,
             disableRange: true,
             disableStream: true
         });

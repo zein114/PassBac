@@ -28,7 +28,14 @@ export default function LoginPage() {
             {/* Left panel — brand */}
             <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-cyan-500 flex-col justify-between p-12 text-white">
                 <div className="flex items-center gap-3">
-                    <BookOpenCheck className="w-8 h-8" />
+                    <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-1.5">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src="/logo.png"
+                            alt="Logo"
+                            className="w-full h-full object-cover rounded-full"
+                        />
+                    </div>
                     <span className="text-xl font-bold">{tc('title')}</span>
                 </div>
                 <div>
