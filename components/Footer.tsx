@@ -45,6 +45,10 @@ export function Footer() {
 
     const currentLang = LANGUAGES.find((l) => l.code === locale) || LANGUAGES[0];
 
+    if (pathname && (pathname.includes('/login') || pathname.includes('/register'))) {
+        return null;
+    }
+
     return (
         <footer className="mt-auto border-t border-gray-100 bg-white py-12 relative">
             {/* Subtle background gradient to make it premium */}

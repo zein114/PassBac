@@ -3,6 +3,7 @@ import '../globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { MainWrapper } from '@/components/MainWrapper';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
@@ -35,11 +36,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <Navbar locale={locale} />
-            <main className="flex-grow pt-24 sm:pt-28 lg:pt-32 pb-12">
-              <div className="container-premium animate-fade-in">
-                {children}
-              </div>
-            </main>
+            <MainWrapper>{children}</MainWrapper>
             <Footer />
           </AuthProvider>
         </NextIntlClientProvider>
