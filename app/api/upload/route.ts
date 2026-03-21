@@ -21,20 +21,45 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Missing file or courseId' }, { status: 400 });
         }
 
-        // Convert file to Buffer
+        // 2. Fetch course metadata to get student_type
+        const { data: course, error: courseError } = await supabase
+            .from('courses')
+            .select('student_type, title')
+            .eq('id', courseId)
+            .single();
+
+        if (courseError || !course) {
+            console.error('[Upload] Course not found:', courseId);
+            return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+        }
+
+        const studentType = course.student_type as 'C' | 'D';
+        console.log(`[Upload] Starting process for "${course.title}" (${studentType})`);
+
+        // 3. Convert file to Buffer
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // Extract Text
+        // 4. Extract Text
         const extractedText = await extractTextFromPDFBuffer(buffer);
+        console.log(`[Upload] Extracted ${extractedText.length} characters from PDF.`);
 
-        // Chunk Text
-        const chunks = chunkText(extractedText, 800);
+        if (!extractedText || extractedText.trim().length === 0) {
+            throw new Error('PDF content is empty or unreadable.');
+        }
 
-        // Process Embeddings and Store in Supabase
-        await processAndStorePDF(courseId, chunks);
+        // 5. Chunk Text
+        const chunks = chunkText(extractedText, 800, 100);
+        console.log(`[Upload] Created ${chunks.length} chunks.`);
 
-        return NextResponse.json({ success: true, chunksProcessed: chunks.length });
+        // 6. Process Embeddings and Store in Supabase
+        await processAndStorePDF(courseId, studentType, chunks);
+
+        return NextResponse.json({
+            success: true,
+            chunksProcessed: chunks.length,
+            courseTitle: course.title
+        });
     } catch (error: any) {
         console.error('API Upload Error:', error);
         return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });

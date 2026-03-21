@@ -46,9 +46,11 @@ export async function POST(req: Request) {
       studentType,
     });
 
+    console.log(`[Chat] RAG retrieved ${chunks.length} chunks for "${lastMessage.content.slice(0, 30)}..."`);
+
     const contextText = chunks.map((c) => c.content).join('\n\n');
 
-    const systemPrompt = `You are BacTutor, an expert teacher for Baccalaureate ${studentType ? `type ${studentType}` : ''} students.
+    const systemPrompt = `You are BacTutor, an expert teacher for Baccalaureate Series ${studentType || 'General'} students.
 IMPORTANT: Respond ONLY in ${language}.
 
 Your role is to TEACH, not just answer. Follow these rules:

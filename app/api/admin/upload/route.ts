@@ -65,8 +65,19 @@ export async function POST(req: Request) {
         if (courseErr) throw new Error(`Course insert failed: ${courseErr.message}`);
 
         // 3. Run RAG pipeline
+        const { extractTextFromPDFBuffer, chunkText } = await import('@/lib/pdf');
         const { processAndStorePDF } = await import('@/lib/rag');
-        await processAndStorePDF(file, course.id, student_type as 'C' | 'D');
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const extractedText = await extractTextFromPDFBuffer(buffer);
+
+        if (extractedText && extractedText.trim().length > 0) {
+            const chunks = chunkText(extractedText, 800, 100);
+            console.log(`[Admin Upload] Processing ${chunks.length} chunks for course ${course.id}`);
+            await processAndStorePDF(course.id, student_type as 'C' | 'D', chunks);
+        } else {
+            console.warn('[Admin Upload] PDF text is empty, skipping embeddings.');
+        }
 
         return NextResponse.json({
             success: true,

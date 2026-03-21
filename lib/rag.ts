@@ -1,56 +1,41 @@
-import { generateEmbedding } from './embeddings';
+import { generateEmbeddings, generateEmbedding } from './embeddings';
 import { getServiceSupabase } from './supabase';
 
-// ─── PDF Text Extraction & Chunking ─────────────────────────
-
-async function extractTextFromFile(file: File): Promise<string> {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require('pdf-parse');
-    const parsed = await pdfParse(buffer);
-    return parsed.text;
-}
-
-function chunkText(text: string, chunkSize = 800, overlap = 100): string[] {
-    const words = text.split(/\s+/);
-    const chunks: string[] = [];
-    let start = 0;
-    while (start < words.length) {
-        const chunk = words.slice(start, start + chunkSize).join(' ');
-        if (chunk.trim()) chunks.push(chunk.trim());
-        start += chunkSize - overlap;
-    }
-    return chunks;
-}
-
-// ─── Process PDF and store embeddings ───────────────────────
+// ─── Process and store embeddings (Batch Optimized) ───────────
 
 export async function processAndStorePDF(
-    file: File,
     courseId: string,
-    studentType: 'C' | 'D'
+    studentType: 'C' | 'D',
+    chunks: string[]
 ): Promise<void> {
     const supabase = getServiceSupabase();
 
-    const text = await extractTextFromFile(file);
-    const chunks = chunkText(text);
+    console.log(`[RAG] Storing ${chunks.length} chunks for course ${courseId} (Type ${studentType})`);
 
-    // Process in batches of 5 to avoid rate limits
-    const batchSize = 5;
+    // Process in larger batches of 20 for OpenAI batch embedding
+    const batchSize = 20;
     for (let i = 0; i < chunks.length; i += batchSize) {
         const batch = chunks.slice(i, i + batchSize);
-        await Promise.all(
-            batch.map(async (chunk) => {
-                const embedding = await generateEmbedding(chunk);
-                const { error } = await supabase.from('embeddings').insert({
+        try {
+            const embeddings = await generateEmbeddings(batch);
+
+            const { error } = await supabase.from('embeddings').insert(
+                batch.map((chunk, index) => ({
                     course_id: courseId,
                     student_type: studentType,
                     content: chunk,
-                    embedding,
-                });
-                if (error) console.error('Error storing chunk:', error);
-            })
-        );
+                    embedding: embeddings[index],
+                }))
+            );
+
+            if (error) {
+                console.error(`[RAG] Error storing batch ${i / batchSize}:`, error);
+            } else {
+                console.log(`[RAG] Batch ${i / batchSize + 1} processed (${batch.length} chunks).`);
+            }
+        } catch (err) {
+            console.error(`[RAG] Failed to process batch ${i / batchSize}:`, err);
+        }
     }
 }
 

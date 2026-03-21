@@ -22,3 +22,16 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     });
     return response.data[0].embedding;
 }
+
+/**
+ * Batch embedding generation for performance.
+ * OpenAI allows up to 2048 inputs per request.
+ */
+export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
+    const openai = getOpenAI();
+    const response = await openai.embeddings.create({
+        model: 'text-embedding-3-small',
+        input: texts.map(t => t.replace(/\n/g, ' ')),
+    });
+    return response.data.map(d => d.embedding);
+}
