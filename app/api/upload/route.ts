@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server';
 import { extractTextFromPDFBuffer, chunkText } from '@/lib/pdf';
 import { processAndStorePDF } from '@/lib/rag';
-import { getServiceSupabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(req: Request) {
     try {
+        // 1. Verify User Session Securely
+        const supabase = await createClient();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const formData = await req.formData();
         const file = formData.get('file') as File;
         const courseId = formData.get('courseId') as string;

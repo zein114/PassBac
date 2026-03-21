@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
 import { Navbar } from '@/components/Navbar';
 
-const inter = Inter({ subsets: ['latin'] });
-
 export const metadata: Metadata = {
-  title: 'Baccalaureate Preparation Assistant',
-  description: 'AI-powered learning platform for Baccalaureate preparation',
+  title: 'Bac Prep — AI-Powered Exam Preparation',
+  description: 'Ace your Baccalaureate with AI-powered learning, courses, and quizzes.',
 };
 
 export default function RootLayout({
@@ -18,10 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-50 min-h-screen flex flex-col`}>
+      <body className="bg-slate-50 min-h-screen flex flex-col antialiased">
         <AuthProvider>
           <Navbar />
-          <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-grow">
             {children}
           </main>
         </AuthProvider>

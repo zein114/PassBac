@@ -1,71 +1,81 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import OpenAI from 'openai';
 import { searchSimilarDocuments } from '@/lib/rag';
-import openai from '@/lib/embeddings';
+
+function getChatClient(): { client: OpenAI; model: string } {
+  if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'your_groq_api_key_here') {
+    return {
+      client: new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' }),
+      model: process.env.CHAT_MODEL || 'llama-3.1-8b-instant',
+    };
+  }
+  return {
+    client: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }),
+    model: process.env.CHAT_MODEL || 'gpt-3.5-turbo',
+  };
+}
 
 export async function POST(req: Request) {
-    try {
-        const { messages, courseId } = await req.json();
+  try {
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-        // Get the latest user message
-        const lastMessage = messages[messages.length - 1];
-        if (!lastMessage || lastMessage.role !== 'user') {
-            return NextResponse.json({ error: 'Invalid messages' }, { status: 400 });
-        }
+    // Load student profile to get student_type for RAG filtering
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('student_type')
+      .eq('id', user.id)
+      .single();
 
-        // 1. Retrieve similar chunks based on user query
-        // If courseId is provided, the query should ideally filter on course_id in supabase
-        // For MVP, we pass it into the search logic (we need to update rag.ts to support filter, but it does! `filter_course_id` exists in our SQL schema).
-        // Let's modify searchSimilarDocuments locally if needed, or just let it search globally.
-        // Our SQL `match_documents` accepts `filter_course_id`. Let's pass it.
+    const studentType = (profile?.student_type as 'C' | 'D') || null;
 
-        // (Wait, `searchSimilarDocuments` in rag.ts doesn't pass filter yet! We can just call it directly here for completeness MVP)
-        const { getServiceSupabase } = await import('@/lib/supabase');
-        const { generateEmbedding } = await import('@/lib/embeddings');
-
-        const queryEmbedding = await generateEmbedding(lastMessage.content);
-        const supabase = getServiceSupabase();
-
-        const rpcParams: any = {
-            query_embedding: queryEmbedding,
-            match_count: 5
-        };
-
-        if (courseId) {
-            rpcParams.filter_course_id = courseId;
-        }
-
-        const { data: chunks } = await supabase.rpc('match_documents', rpcParams);
-
-        // 2. Build Prompt Context
-        let contextText = '';
-        if (chunks && chunks.length > 0) {
-            contextText = chunks.map((c: any) => c.content).join('\n\n');
-        }
-
-        const systemPrompt = `You are a helpful Baccalaureate Preparation Assistant.
-You must answer the user's question based ONLY on the following context.
-If the answer cannot be found in the context, say exactly: "I don't know based on the provided course material."
-Do not make up information.
-
-Context section:
-${contextText}
-`;
-
-        // 3. Call OpenAI
-        const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo', // or 'gpt-4o' based on preference, MVP uses 3.5 for cost/speed
-            messages: [
-                { role: 'system', content: systemPrompt },
-                ...messages.map((m: any) => ({ role: m.role, content: m.content }))
-            ],
-            temperature: 0.3,
-        });
-
-        const reply = response.choices[0].message.content;
-
-        return NextResponse.json({ reply });
-    } catch (error: any) {
-        console.error('Chat API Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    const { messages, courseId } = await req.json();
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage || lastMessage.role !== 'user') {
+      return NextResponse.json({ error: 'Invalid messages' }, { status: 400 });
     }
+
+    // RAG: search filtered by studentType (and optionally courseId)
+    const chunks = await searchSimilarDocuments(lastMessage.content, {
+      matchCount: 6,
+      courseId: courseId || null,
+      studentType,
+    });
+
+    const contextText = chunks.map((c) => c.content).join('\n\n');
+
+    const systemPrompt = `You are BacTutor, an expert teacher for Baccalaureate ${studentType ? `type ${studentType}` : ''} students.
+
+Your role is to TEACH, not just answer. Follow these rules:
+1. Explain concepts step-by-step, like a patient teacher
+2. Use simple language appropriate for a high-school student
+3. After explaining, offer a short practice exercise or ask a follow-up question to test understanding
+4. If the student seems confused, simplify further with an analogy
+5. If a student asks to generate an exercise, create one with a clear solution
+6. Always be encouraging and supportive
+
+${contextText ? `Use this course material as your primary knowledge source:\n\n${contextText}` : 'No specific course material is loaded. Give a general educational answer based on the Baccalaureate curriculum.'}
+
+Only answer topics relevant to the Baccalaureate curriculum. If a question is off-topic, gently redirect.`;
+
+    const { client, model } = getChatClient();
+
+    const response = await client.chat.completions.create({
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages.map((m: any) => ({ role: m.role, content: m.content })),
+      ],
+      temperature: 0.5,
+    });
+
+    const reply = response.choices[0].message.content;
+    return NextResponse.json({ reply });
+
+  } catch (error: any) {
+    console.error('Chat API Error:', error.message);
+    return NextResponse.json({ error: 'assistant_unavailable' }, { status: 500 });
+  }
 }

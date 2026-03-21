@@ -1,16 +1,24 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization — avoids crash at module load time when OPENAI_API_KEY is absent
+// (e.g. when Groq is used as the chat provider)
+let _openai: OpenAI | null = null;
 
-export async function generateEmbedding(text: string) {
+function getOpenAI(): OpenAI {
+    if (!_openai) {
+        if (!process.env.OPENAI_API_KEY) {
+            throw new Error('OPENAI_API_KEY is not set. Embeddings require an OpenAI API key.');
+        }
+        _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return _openai;
+}
+
+export async function generateEmbedding(text: string): Promise<number[]> {
+    const openai = getOpenAI();
     const response = await openai.embeddings.create({
         model: 'text-embedding-3-small',
         input: text.replace(/\n/g, ' '),
     });
-
     return response.data[0].embedding;
 }
-
-export default openai;

@@ -1,185 +1,146 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/lib/supabase';
-import { FileText, Upload, Plus, Trash2, Cpu } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/components/AuthProvider';
+import { createClient } from '@/utils/supabase/client';
+import { FileText, BookOpen, Cpu, Search } from 'lucide-react';
 import Link from 'next/link';
 
 interface Course {
     id: string;
     title: string;
     subject: string;
+    student_type: string;
     pdf_url: string;
 }
 
+const SUBJECT_COLORS: Record<string, string> = {
+    Mathematics: 'bg-indigo-100 text-indigo-700',
+    Physics: 'bg-rose-100 text-rose-700',
+    Science: 'bg-emerald-100 text-emerald-700',
+};
+const SUBJECT_BARS: Record<string, string> = {
+    Mathematics: 'bg-indigo-400',
+    Physics: 'bg-rose-400',
+    Science: 'bg-emerald-400',
+};
+
+const SUBJECTS = ['All', 'Mathematics', 'Physics', 'Science'];
+
 export default function CoursesPage() {
+    const { profile } = useAuth();
     const [courses, setCourses] = useState<Course[]>([]);
+    const [filtered, setFiltered] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
-    const [uploading, setUploading] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [newTitle, setNewTitle] = useState('');
-    const [newSubject, setNewSubject] = useState('Mathematics');
-
-    const fetchCourses = async () => {
-        setLoading(true);
-        const { data, error } = await supabase
-            .from('courses')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (data && !error) {
-            setCourses(data);
-        }
-        setLoading(false);
-    };
+    const [subject, setSubject] = useState('All');
+    const [search, setSearch] = useState('');
+    const supabase = createClient();
 
     useEffect(() => {
-        fetchCourses();
-    }, []);
-
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) return;
-        if (!newTitle.trim()) {
-            alert('Please enter a course title before uploading.');
-            return;
-        }
-
-        const file = e.target.files[0];
-        setUploading(true);
-
-        try {
-            // 1. Upload to Supabase Storage
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('courses')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const pdfUrl = supabase.storage.from('courses').getPublicUrl(filePath).data.publicUrl;
-
-            // 2. Insert into courses table
-            const { data: courseData, error: courseError } = await supabase
-                .from('courses')
-                .insert({
-                    title: newTitle,
-                    subject: newSubject,
-                    pdf_url: pdfUrl
-                })
-                .select()
-                .single();
-
-            if (courseError) throw courseError;
-
-            // 3. Send to our API to process PDF and embeddings
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('courseId', courseData.id);
-
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
+        if (!profile) return;
+        setLoading(true);
+        supabase
+            .from('courses')
+            .select('*')
+            .eq('student_type', profile.student_type)
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+                setCourses(data || []);
+                setFiltered(data || []);
+                setLoading(false);
             });
+    }, [profile]);
 
-            if (!res.ok) throw new Error('Failed to process PDF text/embeddings');
-
-            // Refresh listings
-            fetchCourses();
-            setNewTitle('');
-        } catch (error: any) {
-            alert('Upload error: ' + error.message);
-        } finally {
-            setUploading(false);
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this course?')) return;
-        await supabase.from('courses').delete().eq('id', id);
-        fetchCourses();
-    }
+    useEffect(() => {
+        let result = courses;
+        if (subject !== 'All') result = result.filter(c => c.subject === subject);
+        if (search.trim()) result = result.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
+        setFiltered(result);
+    }, [subject, search, courses]);
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center bg-white p-6 rounded-lg shadow border border-gray-100">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Courses</h1>
-                    <p className="text-gray-500">Manage your course materials</p>
-                </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+            {/* Header */}
+            <div>
+                <h1 className="text-3xl font-extrabold text-gray-900">
+                    Bac {profile?.student_type} Courses
+                </h1>
+                <p className="text-gray-500 text-sm mt-1">
+                    All course materials prepared for your Baccalaureate type.
+                </p>
+            </div>
 
-                <div className="flex gap-4 items-center">
+            {/* Filter bar */}
+            <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
                         type="text"
-                        placeholder="Course Title"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Search courses..."
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        className="input-modern pl-9 !py-2"
                     />
-                    <select
-                        value={newSubject}
-                        onChange={(e) => setNewSubject(e.target.value)}
-                        className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="Mathematics">Mathematics</option>
-                        <option value="Physics">Physics</option>
-                        <option value="Science">Science</option>
-                    </select>
-
-                    <input
-                        type="file"
-                        accept="application/pdf"
-                        ref={fileInputRef}
-                        onChange={handleUpload}
-                        className="hidden"
-                    />
-
-                    <button
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition"
-                    >
-                        {uploading ? (
-                            <span className="flex items-center"><Upload className="animate-bounce w-4 h-4 mr-2" /> Uploading...</span>
-                        ) : (
-                            <span className="flex items-center"><Plus className="w-4 h-4 mr-2" /> Add Course PDF</span>
-                        )}
-                    </button>
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                    {SUBJECTS.map(s => (
+                        <button
+                            key={s}
+                            onClick={() => setSubject(s)}
+                            className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all ${subject === s ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600 hover:border-indigo-400'}`}
+                        >
+                            {s}
+                        </button>
+                    ))}
                 </div>
             </div>
 
+            {/* Courses grid */}
             {loading ? (
-                <div className="text-center py-12 text-gray-500">Loading courses...</div>
-            ) : courses.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300 text-gray-500">
-                    No courses found. Add a PDF to get started.
+                <div className="flex justify-center py-20">
+                    <div className="w-8 h-8 border-4 border-indigo-500/30 border-t-indigo-600 rounded-full animate-spin" />
+                </div>
+            ) : filtered.length === 0 ? (
+                <div className="text-center py-24 border-2 border-dashed border-gray-200 rounded-2xl bg-white">
+                    <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-600 font-bold">No courses found</p>
+                    <p className="text-gray-400 text-sm mt-1">
+                        {courses.length === 0
+                            ? 'Your teacher has not uploaded any materials yet. Check back soon.'
+                            : 'Try adjusting your search or subject filter.'}
+                    </p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {courses.map((course) => (
-                        <div key={course.id} className="bg-white rounded-lg shadow border border-gray-100 overflow-hidden flex flex-col">
-                            <div className="p-5 flex-1">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="flex items-center text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filtered.map((course) => (
+                        <div key={course.id} className="card-hover bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden flex flex-col">
+                            <div className={`h-1.5 w-full ${SUBJECT_BARS[course.subject] || 'bg-gray-300'}`} />
+                            <div className="p-5 flex-1 flex flex-col">
+                                <div className="flex items-start justify-between mb-3">
+                                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${SUBJECT_COLORS[course.subject] || 'bg-gray-100 text-gray-700'}`}>
                                         {course.subject}
-                                    </div>
-                                    <button onClick={() => handleDelete(course.id)} className="text-gray-400 hover:text-red-500 transition">
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
+                                    </span>
+                                    <span className="text-xs text-gray-400 font-medium">Bac {course.student_type}</span>
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">{course.title}</h3>
-                                <div className="flex items-center text-sm text-gray-500 mb-4">
-                                    <FileText className="w-4 h-4 mr-2" /> PDF Document
+                                <h3 className="text-base font-bold text-gray-900 mb-1 flex-grow">{course.title}</h3>
+                                <div className="flex items-center text-xs text-gray-400 mt-2">
+                                    <FileText className="w-3.5 h-3.5 mr-1" /> PDF Document
                                 </div>
                             </div>
-                            <div className="bg-gray-50 px-5 py-3 border-t border-gray-100 flex justify-between items-center">
-                                <a href={course.pdf_url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-                                    View PDF
+                            <div className="border-t border-gray-100 px-5 py-3 flex justify-between items-center bg-gray-50/50">
+                                <a
+                                    href={course.pdf_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm font-medium text-gray-500 hover:text-gray-900 transition flex items-center gap-1"
+                                >
+                                    <FileText className="w-3.5 h-3.5" /> View PDF
                                 </a>
-                                <Link href={`/ai?course=${course.id}`} className="inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-800">
-                                    <Cpu className="w-4 h-4 mr-1" /> Ask AI
+                                <Link
+                                    href={`/ai?course=${course.id}`}
+                                    className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition"
+                                >
+                                    <Cpu className="w-4 h-4" /> Ask AI
                                 </Link>
                             </div>
                         </div>
