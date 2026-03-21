@@ -33,16 +33,16 @@ export default function RegisterPage() {
                 </div>
                 <div>
                     <h1 className="text-5xl font-extrabold leading-tight mb-6">
-                        Start your<br />journey today.
+                        {t('registerLandingTitle')}
                     </h1>
                     <p className="text-white/80 text-lg leading-relaxed max-w-md">
-                        Upload your courses, chat with your AI tutor, and practice with smart quizzes designed around your exact syllabus.
+                        {t('registerLandingDescription')}
                     </p>
                     <div className="flex gap-6 mt-10">
                         {[
-                            { icon: <Brain className="w-5 h-5" />, label: 'AI Assistant' },
-                            { icon: <Sparkles className="w-5 h-5" />, label: 'Smart Quizzes' },
-                            { icon: <BookOpenCheck className="w-5 h-5" />, label: 'Upload PDFs' }
+                            { icon: <Brain className="w-5 h-5" />, label: t('featureAiAssistant') },
+                            { icon: <Sparkles className="w-5 h-5" />, label: t('featureSmartQuizzes') },
+                            { icon: <BookOpenCheck className="w-5 h-5" />, label: t('featureUploadPdfs') }
                         ].map((f, i) => (
                             <div key={i} className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-medium border border-white/10 shadow-sm">
                                 {f.icon}{f.label}
@@ -50,7 +50,7 @@ export default function RegisterPage() {
                         ))}
                     </div>
                 </div>
-                <p className="text-white/40 text-sm">© 2026 BacPrep. All rights reserved.</p>
+                <p className="text-white/40 text-sm">© 2026 {tc('title')}. All rights reserved.</p>
             </div>
 
             {/* Right panel */}
@@ -62,7 +62,7 @@ export default function RegisterPage() {
                     </div>
 
                     <h2 className="text-3xl font-extrabold text-gray-900">{t('register')}</h2>
-                    <p className="mt-2 text-gray-500 text-sm">Join thousands of students preparing smarter.</p>
+                    <p className="mt-2 text-gray-500 text-sm">{t('registerLandingSubtext')}</p>
 
                     <div className="mt-8 bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
                         <RegisterForm />

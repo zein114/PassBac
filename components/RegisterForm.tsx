@@ -5,7 +5,10 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, Loader2, GraduationCap } from 'lucide-react';
 
+import { useTranslations } from 'next-intl';
+
 export default function RegisterForm() {
+    const t = useTranslations('Auth');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [studentType, setStudentType] = useState<'C' | 'D' | ''>('');
@@ -17,7 +20,7 @@ export default function RegisterForm() {
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!studentType) { setError('Please select your Baccalaureate type.'); return; }
+        if (!studentType) { setError(t('selectSeriesError')); return; }
         setLoading(true);
         setError(null);
         setSuccess(null);
@@ -38,7 +41,7 @@ export default function RegisterForm() {
         }
 
         // 2. Profile is now handled by the database trigger!
-        setSuccess('Account created! Redirecting to sign in...');
+        setSuccess(t('accountCreated'));
         setLoading(false);
         setTimeout(() => router.push('/login'), 2000);
     };
@@ -49,7 +52,7 @@ export default function RegisterForm() {
                 {/* Bac Type selector */}
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
-                        Choose your Baccalaureate Profile
+                        {t('studentType')}
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                         {(['C', 'D'] as const).map((type) => (
@@ -67,7 +70,7 @@ export default function RegisterForm() {
                                 </div>
                                 <span className={`font-bold text-lg ${studentType === type ? 'text-gray-900' : 'text-gray-600'}`}>Bac {type}</span>
                                 <span className="text-[10px] text-center font-medium opacity-60 leading-tight px-1">
-                                    {type === 'C' ? 'Math & Physics' : 'Bio & Chemistry'}
+                                    {type === 'C' ? t('seriesC') : t('seriesD')}
                                 </span>
                                 {studentType === type && (
                                     <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-indigo-600 border-4 border-white flex items-center justify-center shadow-lg animate-in zoom-in-50 duration-300">
@@ -82,7 +85,7 @@ export default function RegisterForm() {
                 <div className="space-y-4">
                     {/* Email */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">Email</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">{t('email')}</label>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
@@ -100,7 +103,7 @@ export default function RegisterForm() {
 
                     {/* Password */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">Password</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5 pl-1">{t('password')}</label>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
@@ -139,7 +142,7 @@ export default function RegisterForm() {
                     {loading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                        <>Start Learning Now</>
+                        <>{t('startLearning')}</>
                     )}
                 </button>
             </form>

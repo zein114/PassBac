@@ -6,7 +6,11 @@ import { useRouter } from 'next/navigation';
 import { Upload, FileText, CheckCircle2, AlertCircle, Loader2, BookOpen, Trash2 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
+import { useTranslations } from 'next-intl';
+
 export default function AdminDashboard() {
+    const t = useTranslations('Admin');
+    const tc = useTranslations('Common');
     const { profile, loading: authLoading } = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -18,7 +22,6 @@ export default function AdminDashboard() {
     const [title, setTitle] = useState('');
     const [subject, setSubject] = useState('Mathematics');
     const [studentType, setStudentType] = useState<'C' | 'D'>('C');
-    const [file, setFile] = useState<File | null>(null);
 
     const supabase = createClient();
 
@@ -45,7 +48,7 @@ export default function AdminDashboard() {
 
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!file) { setError('Please select a PDF file.'); return; }
+        if (!file) { setError(t('selectFileError')); return; }
 
         setLoading(true);
         setError(null);
@@ -66,7 +69,7 @@ export default function AdminDashboard() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Upload failed');
 
-            setSuccess('Course uploaded and processed successfully!');
+            setSuccess(t('uploadSuccess'));
             setTitle('');
             setFile(null);
             loadRecentCourses();
@@ -78,11 +81,11 @@ export default function AdminDashboard() {
     };
 
     const deleteCourse = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this course and all its embeddings?')) return;
+        if (!confirm(t('deleteConfirm'))) return;
 
         const { error } = await supabase.from('courses').delete().eq('id', id);
         if (error) {
-            alert('Failed to delete: ' + error.message);
+            alert(tc('error') + ': ' + error.message);
         } else {
             loadRecentCourses();
         }
@@ -100,8 +103,8 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900">Admin Dashboard</h1>
-                    <p className="text-gray-500 text-sm mt-1">Manage courses and content for Bac C & D students.</p>
+                    <h1 className="text-3xl font-extrabold text-gray-900">{t('title')}</h1>
+                    <p className="text-gray-500 text-sm mt-1">{t('description')}</p>
                 </div>
             </div>
 
@@ -110,12 +113,12 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-1 space-y-6">
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Upload className="w-5 h-5 text-indigo-500" /> Upload New Course
+                            <Upload className="w-5 h-5 text-indigo-500" /> {t('uploadNew')}
                         </h2>
 
                         <form onSubmit={handleUpload} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Course Title</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('courseTitle')}</label>
                                 <input
                                     type="text"
                                     required
@@ -127,20 +130,20 @@ export default function AdminDashboard() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('subject')}</label>
                                 <select
                                     value={subject}
                                     onChange={(e) => setSubject(e.target.value)}
                                     className="input-modern"
                                 >
-                                    <option>Mathematics</option>
-                                    <option>Physics</option>
-                                    <option>Science</option>
+                                    <option value="Mathematics">{tc('subjects.mathematics')}</option>
+                                    <option value="Physics">{tc('subjects.physics')}</option>
+                                    <option value="Science">{tc('subjects.science')}</option>
                                 </select>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Student Type</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('studentType')}</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     {(['C', 'D'] as const).map((type) => (
                                         <button
@@ -152,28 +155,28 @@ export default function AdminDashboard() {
                                                     : 'border-gray-100 text-gray-500 hover:border-indigo-200'
                                                 }`}
                                         >
-                                            Bac {type}
+                                            {t('bacType', { type })}
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">PDF File</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('pdfFile')}</label>
                                 <div className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-2xl transition-all ${file ? 'border-green-300 bg-green-50' : 'border-gray-200 hover:border-indigo-300'}`}>
                                     <div className="space-y-1 text-center">
                                         {file ? (
                                             <div className="flex flex-col items-center">
                                                 <FileText className="mx-auto h-12 w-12 text-green-500" />
                                                 <p className="text-sm text-green-700 font-medium mt-2">{file.name}</p>
-                                                <button type="button" onClick={() => setFile(null)} className="text-xs text-red-500 mt-1 hover:underline">Remove</button>
+                                                <button type="button" onClick={() => setFile(null)} className="text-xs text-red-500 mt-1 hover:underline">{tc('delete')}</button>
                                             </div>
                                         ) : (
                                             <>
                                                 <Upload className="mx-auto h-12 w-12 text-gray-300" />
                                                 <div className="flex text-sm text-gray-600">
                                                     <label className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
-                                                        <span>Upload a file</span>
+                                                        <span>{t('uploadPlaceholder')}</span>
                                                         <input
                                                             type="file"
                                                             accept=".pdf"
@@ -182,7 +185,7 @@ export default function AdminDashboard() {
                                                         />
                                                     </label>
                                                 </div>
-                                                <p className="text-xs text-gray-500">PDF up to 10MB</p>
+                                                <p className="text-xs text-gray-500">{t('uploadLimit')}</p>
                                             </>
                                         )}
                                     </div>
@@ -206,7 +209,7 @@ export default function AdminDashboard() {
                                 className="btn-primary flex items-center justify-center gap-2"
                             >
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                {loading ? 'Processing RAG...' : 'Upload Course'}
+                                {loading ? t('processing') : t('uploadButton')}
                             </button>
                         </form>
                     </div>
@@ -217,14 +220,14 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <BookOpen className="w-5 h-5 text-indigo-500" /> Recently Uploaded
+                                <BookOpen className="w-5 h-5 text-indigo-500" /> {t('recentlyUploaded')}
                             </h2>
                             <span className="text-xs font-medium text-gray-500">{recentCourses.length} items</span>
                         </div>
 
                         <div className="divide-y divide-gray-100">
                             {recentCourses.length === 0 ? (
-                                <div className="p-10 text-center text-gray-400 text-sm">No courses uploaded yet.</div>
+                                <div className="p-10 text-center text-gray-400 text-sm">{t('noUploads')}</div>
                             ) : (
                                 recentCourses.map((c) => (
                                     <div key={c.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
@@ -235,7 +238,7 @@ export default function AdminDashboard() {
                                             <div>
                                                 <p className="text-sm font-bold text-gray-900">{c.title}</p>
                                                 <p className="text-xs text-gray-500">
-                                                    {c.subject} • Bac {c.student_type} • {new Date(c.created_at).toLocaleDateString()}
+                                                    {tc(`subjects.${c.subject.toLowerCase()}`)} • Bac {c.student_type} • {new Date(c.created_at).toLocaleDateString()}
                                                 </p>
                                             </div>
                                         </div>
@@ -245,14 +248,14 @@ export default function AdminDashboard() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
-                                                title="View PDF"
+                                                title={tc('viewPdf')}
                                             >
                                                 <FileText className="w-4 h-4" />
                                             </a>
                                             <button
                                                 onClick={() => deleteCourse(c.id)}
                                                 className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                                                title="Delete Course"
+                                                title={tc('delete')}
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>

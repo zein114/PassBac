@@ -27,7 +27,11 @@ const SUBJECT_BARS: Record<string, string> = {
 
 const SUBJECTS = ['All', 'Mathematics', 'Physics', 'Science'];
 
+import { useTranslations } from 'next-intl';
+
 export default function CoursesPage() {
+    const t = useTranslations('Courses');
+    const tc = useTranslations('Common');
     const { profile } = useAuth();
     const [courses, setCourses] = useState<Course[]>([]);
     const [filtered, setFiltered] = useState<Course[]>([]);
@@ -35,6 +39,13 @@ export default function CoursesPage() {
     const [subject, setSubject] = useState('All');
     const [search, setSearch] = useState('');
     const supabase = createClient();
+
+    const SUBJECTS = [
+        { id: 'All', label: tc('subjects.all') },
+        { id: 'Mathematics', label: tc('subjects.mathematics') },
+        { id: 'Physics', label: tc('subjects.physics') },
+        { id: 'Science', label: tc('subjects.science') },
+    ];
 
     useEffect(() => {
         if (!profile) return;
@@ -63,10 +74,10 @@ export default function CoursesPage() {
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-extrabold text-gray-900">
-                    Bac {profile?.student_type} Courses
+                    {t('title', { type: profile?.student_type })}
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">
-                    All course materials prepared for your Baccalaureate type.
+                    {t('description')}
                 </p>
             </div>
 
@@ -76,7 +87,7 @@ export default function CoursesPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     <input
                         type="text"
-                        placeholder="Search courses..."
+                        placeholder={t('searchPlaceholder')}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         className="input-modern pl-9 !py-2"
@@ -85,11 +96,11 @@ export default function CoursesPage() {
                 <div className="flex gap-2 flex-wrap">
                     {SUBJECTS.map(s => (
                         <button
-                            key={s}
-                            onClick={() => setSubject(s)}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all ${subject === s ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600 hover:border-indigo-400'}`}
+                            key={s.id}
+                            onClick={() => setSubject(s.id)}
+                            className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all ${subject === s.id ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600 hover:border-indigo-400'}`}
                         >
-                            {s}
+                            {s.label}
                         </button>
                     ))}
                 </div>
@@ -103,11 +114,11 @@ export default function CoursesPage() {
             ) : filtered.length === 0 ? (
                 <div className="text-center py-24 border-2 border-dashed border-gray-200 rounded-2xl bg-white">
                     <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-600 font-bold">No courses found</p>
+                    <p className="text-gray-600 font-bold">{t('noCoursesFound')}</p>
                     <p className="text-gray-400 text-sm mt-1">
                         {courses.length === 0
-                            ? 'Your teacher has not uploaded any materials yet. Check back soon.'
-                            : 'Try adjusting your search or subject filter.'}
+                            ? t('emptyMaterials')
+                            : t('adjustFilter')}
                     </p>
                 </div>
             ) : (
@@ -118,13 +129,13 @@ export default function CoursesPage() {
                             <div className="p-5 flex-1 flex flex-col">
                                 <div className="flex items-start justify-between mb-3">
                                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${SUBJECT_COLORS[course.subject] || 'bg-gray-100 text-gray-700'}`}>
-                                        {course.subject}
+                                        {tc(`subjects.${course.subject.toLowerCase()}`)}
                                     </span>
-                                    <span className="text-xs text-gray-400 font-medium">Bac {course.student_type}</span>
+                                    <span className="text-xs text-gray-400 font-medium">{t('pdfDocument')}</span>
                                 </div>
                                 <h3 className="text-base font-bold text-gray-900 mb-1 flex-grow">{course.title}</h3>
                                 <div className="flex items-center text-xs text-gray-400 mt-2">
-                                    <FileText className="w-3.5 h-3.5 mr-1" /> PDF Document
+                                    <FileText className="w-3.5 h-3.5 mr-1" /> {t('pdfDocument')}
                                 </div>
                             </div>
                             <div className="border-t border-gray-100 px-5 py-3 flex justify-between items-center bg-gray-50/50">
@@ -134,13 +145,13 @@ export default function CoursesPage() {
                                     rel="noopener noreferrer"
                                     className="text-sm font-medium text-gray-500 hover:text-gray-900 transition flex items-center gap-1"
                                 >
-                                    <FileText className="w-3.5 h-3.5" /> View PDF
+                                    <FileText className="w-3.5 h-3.5" /> {tc('viewPdf')}
                                 </a>
                                 <Link
                                     href={`/ai?course=${course.id}`}
                                     className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition"
                                 >
-                                    <Cpu className="w-4 h-4" /> Ask AI
+                                    <Cpu className="w-4 h-4" /> {tc('askAi')}
                                 </Link>
                             </div>
                         </div>

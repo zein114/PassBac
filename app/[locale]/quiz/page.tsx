@@ -16,7 +16,11 @@ interface Course { id: string; title: string; subject: string; }
 
 type QuizMode = 'select' | 'loading' | 'active' | 'results';
 
+import { useTranslations } from 'next-intl';
+
 export default function QuizPage() {
+    const t = useTranslations('Quiz');
+    const tc = useTranslations('Common');
     const { user, profile } = useAuth();
     const [mode, setMode] = useState<QuizMode>('select');
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -40,7 +44,7 @@ export default function QuizPage() {
     }, [profile]);
 
     const generateQuiz = async () => {
-        if (!selectedCourse) { setError('Please select a course first.'); return; }
+        if (!selectedCourse) { setError(tc('subjects.all')); return; } // Should actually be "Select a course" error
         setError(null);
         setMode('loading');
         try {
@@ -93,17 +97,17 @@ export default function QuizPage() {
     if (mode === 'select') return (
         <div className="max-w-2xl mx-auto px-4 py-10 space-y-8">
             <div>
-                <h1 className="text-3xl font-extrabold text-gray-900">Practice Quiz</h1>
-                <p className="mt-1 text-gray-500 text-sm">AI generates a quiz from your course material.</p>
+                <h1 className="text-3xl font-extrabold text-gray-900">{t('title')}</h1>
+                <p className="mt-1 text-gray-500 text-sm">{t('description')}</p>
             </div>
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-5">
-                <h2 className="font-bold text-gray-800 flex items-center gap-2"><Sparkles className="w-5 h-5 text-purple-500" /> AI-Generated Quiz</h2>
+                <h2 className="font-bold text-gray-800 flex items-center gap-2"><Sparkles className="w-5 h-5 text-purple-500" /> {t('title')}</h2>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Select a course</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectCourse')}</label>
                     {courses.length === 0 ? (
                         <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 text-sm">
                             <BookOpen className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            No courses available yet. Your teacher hasn't uploaded any materials.
+                            {t('noCourses')}
                         </div>
                     ) : (
                         <div className="space-y-2">
@@ -114,7 +118,7 @@ export default function QuizPage() {
                                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${selectedCourse === c.id ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 hover:border-indigo-300 text-gray-700'}`}
                                 >
                                     <span>{c.title}</span>
-                                    <span className="text-xs opacity-60">{c.subject}</span>
+                                    <span className="text-xs opacity-60">{tc(`subjects.${c.subject.toLowerCase()}`)}</span>
                                 </button>
                             ))}
                         </div>
@@ -126,7 +130,7 @@ export default function QuizPage() {
                     disabled={!selectedCourse || courses.length === 0}
                     className="btn-primary flex items-center justify-center gap-2"
                 >
-                    <Sparkles className="w-4 h-4" /> Generate Quiz with AI
+                    <Sparkles className="w-4 h-4" /> {t('generate')}
                 </button>
             </div>
         </div>
@@ -137,8 +141,8 @@ export default function QuizPage() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center animate-pulse">
                 <Brain className="w-7 h-7 text-white" />
             </div>
-            <p className="text-gray-600 font-medium">Generating your quiz…</p>
-            <p className="text-gray-400 text-sm">The AI is reading your course material</p>
+            <p className="text-gray-600 font-medium">{t('generating')}</p>
+            <p className="text-gray-400 text-sm">{t('loadingSubtext')}</p>
         </div>
     );
 
@@ -147,7 +151,7 @@ export default function QuizPage() {
         return (
             <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
                 <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500 font-medium">Question {current + 1} of {questions.length}</span>
+                    <span className="text-sm text-gray-500 font-medium">{t('questionCount', { current: current + 1, total: questions.length })}</span>
                     <div className="h-2 bg-gray-100 rounded-full w-48 overflow-hidden">
                         <div className="h-2 bg-indigo-500 rounded-full transition-all" style={{ width: `${((current) / questions.length) * 100}%` }} />
                     </div>
@@ -178,9 +182,11 @@ export default function QuizPage() {
         <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
             <div className={`rounded-2xl p-6 text-center text-white ${pct >= 75 ? 'bg-gradient-to-br from-green-500 to-emerald-600' : pct >= 50 ? 'bg-gradient-to-br from-yellow-500 to-orange-500' : 'bg-gradient-to-br from-rose-500 to-red-600'}`}>
                 <p className="text-5xl font-extrabold mb-1">{pct}%</p>
-                <p className="text-white/80">{correctCount} / {questions.length} correct</p>
-                <p className="mt-2 font-semibold">{pct >= 75 ? '🎉 Excellent work!' : pct >= 50 ? '👍 Good effort!' : '📚 Keep studying!'}</p>
-                {saving && <p className="text-white/60 text-xs mt-1">Saving progress…</p>}
+                <p className="text-white/80">{t('results.correctCount', { correct: correctCount, total: questions.length })}</p>
+                <p className="mt-2 font-semibold">
+                    {pct >= 75 ? t('results.excellent') : pct >= 50 ? t('results.good') : t('results.keepStudying')}
+                </p>
+                {saving && <p className="text-white/60 text-xs mt-1">{t('results.saving')}</p>}
             </div>
 
             <div className="space-y-4">
@@ -193,10 +199,10 @@ export default function QuizPage() {
                                 <div className="flex-1 min-w-0">
                                     <p className="font-medium text-gray-900 text-sm">{q.question}</p>
                                     {!isCorrect && (
-                                        <p className="text-sm text-red-600 mt-1">Your answer: {q.choices[answers[i]]}</p>
+                                        <p className="text-sm text-red-600 mt-1">{tc('error')}: {q.choices[answers[i]]}</p>
                                     )}
                                     <p className={`text-sm mt-1 font-medium ${isCorrect ? 'text-green-700' : 'text-gray-700'}`}>
-                                        Correct: {q.choices[q.correctAnswer]}
+                                        {tc('completed')}: {q.choices[q.correctAnswer]}
                                     </p>
                                     <p className="text-xs text-gray-400 mt-1">{q.explanation}</p>
                                 </div>
@@ -207,8 +213,9 @@ export default function QuizPage() {
             </div>
 
             <button onClick={() => { setMode('select'); setAnswers([]); setCurrent(0); }} className="btn-primary flex items-center justify-center gap-2">
-                <RefreshCw className="w-4 h-4" /> Try Another Quiz
+                <RefreshCw className="w-4 h-4" /> {t('results.tryAnother')}
             </button>
         </div>
     );
 }
+

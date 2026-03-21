@@ -5,7 +5,10 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, Zap, Loader2 } from 'lucide-react';
 
+import { useTranslations } from 'next-intl';
+
 export default function LoginForm() {
+    const t = useTranslations('Auth');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -40,7 +43,7 @@ export default function LoginForm() {
             <form className="space-y-5" onSubmit={handleLogin}>
                 {/* Email */}
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">{t('email')}</label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
@@ -59,9 +62,9 @@ export default function LoginForm() {
                 {/* Password */}
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <label className="block text-sm font-semibold text-gray-700">Password</label>
+                        <label className="block text-sm font-semibold text-gray-700">{t('password')}</label>
                         <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
-                            Forgot?
+                            {t('forgotPassword')}
                         </button>
                     </div>
                     <div className="relative group">
@@ -95,7 +98,7 @@ export default function LoginForm() {
                     {loading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                        <>Sign in to Dashboard</>
+                        <>{t('signInToDashboard')}</>
                     )}
                 </button>
             </form>

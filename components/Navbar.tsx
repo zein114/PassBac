@@ -49,15 +49,16 @@ export function Navbar({ locale }: { locale: string }) {
 
     return (
         <header
-            className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'}`}
+            className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'
+                }`}
         >
             <nav className="max-w-fit mx-auto glass rounded-full px-4 py-2 shadow-xl border border-white/40 flex items-center gap-6">
-                {/* Logo Link */}
+                {/* Logo Icon Only (Enlarged & Edge-to-Edge) */}
                 <Link href="/dashboard" className="flex-shrink-0 transition-transform active:scale-90">
                     <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-1.5">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                            src="/logo.png"
+                            src="@public/logo.png"
                             alt="Logo"
                             className="w-full h-full object-cover rounded-full"
                         />
@@ -142,16 +143,6 @@ export function Navbar({ locale }: { locale: string }) {
                                 </Link>
                             );
                         })}
-                        <button
-                            onClick={() => {
-                                setIsMenuOpen(false);
-                                signOut();
-                            }}
-                            className="px-4 py-3 rounded-2xl text-sm font-bold flex items-center gap-3 text-red-600 hover:bg-red-50 transition-all mt-2 border border-red-100/50"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            <span>{tc('logout')}</span>
-                        </button>
                     </div>
                 </div>
             )}

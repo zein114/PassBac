@@ -133,7 +133,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                         <Calendar className="w-8 h-8 text-indigo-600" />
                         {t('Planner.title')}
                     </h1>
-                    <p className="text-slate-500 mt-1">Gère ton temps et optimise tes révisions.</p>
+                    <p className="text-slate-500 mt-1">{t('Planner.description')}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -202,7 +202,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                                                 <span className={`px-2 py-0.5 rounded-md ${session.subject === 'Mathematics' ? 'bg-indigo-50 text-indigo-600' :
                                                     session.subject === 'Physics' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
                                                     }`}>
-                                                    {session.subject}
+                                                    {t(`Common.subjects.${session.subject.toLowerCase()}`)}
                                                 </span>
                                                 <span className="flex items-center gap-1">
                                                     <Clock className="w-3.5 h-3.5" />
@@ -248,9 +248,9 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                                         onChange={e => setNewSession({ ...newSession, subject: e.target.value })}
                                         className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"
                                     >
-                                        <option value="Mathematics">Mathematics</option>
-                                        <option value="Physics">Physics</option>
-                                        <option value="Science">Science</option>
+                                        <option value="Mathematics">{t('Common.subjects.mathematics')}</option>
+                                        <option value="Physics">{t('Common.subjects.physics')}</option>
+                                        <option value="Science">{t('Common.subjects.science')}</option>
                                     </select>
                                 </div>
                                 <div>
@@ -293,7 +293,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
+                                    className="flex-1 px-4 py-2 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
                                 >
                                     {t('Common.save')}
                                 </button>

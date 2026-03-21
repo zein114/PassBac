@@ -6,10 +6,17 @@ import { Footer } from '@/components/Footer';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: 'PassBac — AI-Powered Exam Preparation',
-  description: 'Ace your Baccalaureate with AI-powered learning, courses, and quizzes.',
-};
+import { getTranslations } from 'next-intl/server';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+
+  return {
+    title: t('title'),
+    description: t('description'),
+  };
+}
 
 export default async function RootLayout({
   children,

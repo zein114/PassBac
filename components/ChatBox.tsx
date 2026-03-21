@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Send, User as UserIcon, Bot, Info } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -10,8 +9,12 @@ interface Message {
 }
 
 export default function ChatBox() {
+    const t = useTranslations('AI');
+    const tc = useTranslations('Common');
+    const locale = useLocale();
+
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: 'Hello! I am your Baccalaureate Preparation Assistant. Ask me anything about your courses — I am here to help you understand lessons, practice exercises, and prepare for your exams.' }
+        { role: 'assistant', content: t('initialMessage') }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
@@ -40,7 +43,7 @@ export default function ChatBox() {
                 body: JSON.stringify({
                     messages: [...messages, userMessage],
                     courseId,
-                    locale: window.location.pathname.split('/')[1] || 'fr'
+                    locale: locale
                 }),
             });
 
@@ -53,7 +56,7 @@ export default function ChatBox() {
         } catch {
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: 'I am sorry, I am not available at the moment. Please try again in a few seconds.',
+                content: t('errorMessage'),
             }]);
         } finally {
             setLoading(false);
@@ -69,9 +72,9 @@ export default function ChatBox() {
                     <Bot className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="font-bold text-sm text-gray-800">AI Tutor</p>
+                    <p className="font-bold text-sm text-gray-800">{t('title')}</p>
                     <p className="text-xs text-green-500 flex items-center gap-1 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" /> Online
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" /> {t('online')}
                     </p>
                 </div>
             </div>
@@ -80,7 +83,7 @@ export default function ChatBox() {
             {courseId && (
                 <div className="mx-4 mt-3 flex-shrink-0 bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-2.5 flex items-center gap-2 text-xs text-indigo-700 font-medium">
                     <Info className="w-3.5 h-3.5 flex-shrink-0" />
-                    Answers are focused on this course's content.
+                    {t('courseContext')}
                 </div>
             )}
 
@@ -122,22 +125,22 @@ export default function ChatBox() {
             {/* Quick Actions */}
             <div className="px-4 py-2 border-t border-gray-50 bg-white flex flex-wrap gap-2">
                 <button
-                    onClick={() => { setInput('Can you explain this lesson simply?'); }}
+                    onClick={() => { setInput(t('quickActions.explainPrompt')); }}
                     className="px-3 py-1.5 rounded-lg border border-indigo-100 bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition-colors"
                 >
-                    Explain Simply
+                    {t('quickActions.explain')}
                 </button>
                 <button
-                    onClick={() => { setInput('Can you give me a practice exercise from this course?'); }}
+                    onClick={() => { setInput(t('quickActions.exercisePrompt')); }}
                     className="px-3 py-1.5 rounded-lg border border-purple-100 bg-purple-50 text-purple-700 text-xs font-semibold hover:bg-purple-100 transition-colors"
                 >
-                    Give me an Exercise
+                    {t('quickActions.exercise')}
                 </button>
                 <button
-                    onClick={() => { setInput('What are the key points I should remember?'); }}
+                    onClick={() => { setInput(t('quickActions.keyPointsPrompt')); }}
                     className="px-3 py-1.5 rounded-lg border border-cyan-100 bg-cyan-50 text-cyan-700 text-xs font-semibold hover:bg-cyan-100 transition-colors"
                 >
-                    Key Points
+                    {t('quickActions.keyPoints')}
                 </button>
             </div>
 
@@ -149,7 +152,7 @@ export default function ChatBox() {
                         type="text"
                         value={input}
                         onChange={e => setInput(e.target.value)}
-                        placeholder="Ask about your courses..."
+                        placeholder={t('placeholder')}
                         className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
                     />
                     <button

@@ -63,9 +63,9 @@ export default function Dashboard() {
         ? Math.round((stats.correctAnswers / stats.totalQuestions) * 100) : 0;
 
     const cards = [
-        { title: tc('courses'), description: 'Browse materials for your Bac type.', href: '/courses', icon: <BookOpen className="w-7 h-7 text-indigo-500" />, bg: 'bg-indigo-50', badge: `Bac ${profile.student_type}`, badgeBg: 'bg-indigo-100 text-indigo-700' },
-        { title: tc('aiTutor'), description: 'Chat with your personal AI tutor.', href: '/ai', icon: <MessageSquare className="w-7 h-7 text-purple-500" />, bg: 'bg-purple-50', badge: 'Teacher Mode', badgeBg: 'bg-purple-100 text-purple-700' },
-        { title: tc('quiz'), description: 'Generate a quiz from your courses.', href: '/quiz', icon: <Brain className="w-7 h-7 text-cyan-500" />, bg: 'bg-cyan-50', badge: 'AI Generated', badgeBg: 'bg-cyan-100 text-cyan-700' },
+        { title: tc('courses'), description: t('modules.coursesDesc'), href: '/courses', icon: <BookOpen className="w-7 h-7 text-indigo-500" />, bg: 'bg-indigo-50', badge: `Bac ${profile.student_type}`, badgeBg: 'bg-indigo-100 text-indigo-700' },
+        { title: tc('aiTutor'), description: t('modules.aiDesc'), href: '/ai', icon: <MessageSquare className="w-7 h-7 text-purple-500" />, bg: 'bg-purple-50', badge: t('stats.teacherMode'), badgeBg: 'bg-purple-100 text-purple-700' },
+        { title: tc('quiz'), description: t('modules.quizDesc'), href: '/quiz', icon: <Brain className="w-7 h-7 text-cyan-500" />, bg: 'bg-cyan-50', badge: t('stats.aiGenerated'), badgeBg: 'bg-cyan-100 text-cyan-700' },
     ];
 
     const statCards = [
@@ -86,10 +86,10 @@ export default function Dashboard() {
                             <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Bac {profile.student_type}</span>
                         </div>
                         <h1 className="text-2xl md:text-4xl font-extrabold text-white capitalize">{t('welcome')}, {firstName}!</h1>
-                        <p className="text-white/70 mt-2 text-xs md:text-sm max-w-md leading-relaxed">Your personalized Baccalaureate prep platform is ready. Start learning, ask your AI tutor, and practice with real quizzes.</p>
+                        <p className="text-white/70 mt-2 text-xs md:text-sm max-w-md leading-relaxed">{t('heroDescription')}</p>
                     </div>
                     <Link href="/ai" className="flex-shrink-0 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 transition text-white font-bold px-6 py-4 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg text-sm md:text-base">
-                        <Sparkles className="w-5 h-5" /> Ask AI now
+                        <Sparkles className="w-5 h-5" /> {t('askAiNow')}
                     </Link>
                 </div>
             </div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
 
                     {/* Module cards */}
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Learning Modules</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">{t('modules.title')}</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             {cards.map((card, i) => (
                                 <Link key={i} href={card.href} className="card-hover group">
@@ -119,7 +119,7 @@ export default function Dashboard() {
                                         <h3 className="text-lg font-bold text-gray-900 mb-1">{card.title}</h3>
                                         <p className="text-sm text-gray-500 flex-grow">{card.description}</p>
                                         <div className="flex items-center gap-1 mt-4 text-indigo-600 text-sm font-medium group-hover:gap-2 transition-all">
-                                            Open <ChevronRight className="w-4 h-4" />
+                                            {tc('open')} <ChevronRight className="w-4 h-4" />
                                         </div>
                                     </div>
                                 </Link>
@@ -137,8 +137,30 @@ export default function Dashboard() {
                     <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 space-y-4">
                         {todaySessions.length === 0 ? (
                             <div className="text-center py-6">
-                                <p className="text-sm text-gray-500 mb-4">Aucune session aujourd'hui.</p>
+                                <p className="text-sm text-gray-500 mb-4">{t('noSessions')}</p>
                                 <Link href="/planner" className="inline-block px-4 py-2 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-xl hover:bg-indigo-100 transition-colors">
+                                    {t('openPlanner')}
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {todaySessions.map((s) => (
+                                    <div key={s.id} className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/50 border border-gray-100">
+                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-xs font-bold text-indigo-600 shadow-sm">
+                                            {s.start_time.slice(0, 5)}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-bold text-gray-900 truncate">{s.title}</p>
+                                            <p className="text-[10px] text-gray-400 font-bold uppercase">{tc(`subjects.${s.subject.toLowerCase()}`)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
                                     Aller au planning
                                 </Link>
                             </div>

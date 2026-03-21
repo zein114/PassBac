@@ -1,0 +1,189 @@
+{
+    "Common": {
+        "title": "PassBac",
+        "dashboard": "Dashboard",
+        "courses": "Courses",
+        "aiTutor": "AI Tutor",
+        "quiz": "Quiz",
+        "planner": "Planner",
+        "admin": "Admin",
+        "logout": "Logout",
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "completed": "Completed",
+        "pending": "Pending",
+        "tagline": "Excellence in Education",
+        "systemStatus": "System Operational",
+        "viewPdf": "View PDF",
+        "askAi": "Ask AI",
+        "open": "Open",
+        "viewAll": "View all",
+        "quickActions": "Quick Actions",
+        "subjects": {
+            "all": "All",
+            "mathematics": "Mathematics",
+            "physics": "Physics",
+            "science": "Science"
+        }
+    },
+    "Dashboard": {
+        "title": "Student Dashboard",
+        "welcome": "Welcome",
+        "description": "Your learning progress at a glance.",
+        "heroDescription": "Your personalized Baccalaureate prep platform is ready. Start learning, ask your AI tutor, and practice with real quizzes.",
+        "askAiNow": "Ask AI now",
+        "stats": {
+            "courses": "Courses viewed",
+            "quizzes": "Quizzes completed",
+            "accuracy": "Average accuracy",
+            "sessions": "Sessions today",
+            "totalCourses": "Total Courses",
+            "progressPoints": "Progress Points",
+            "quizScore": "Quiz Avg",
+            "studyTime": "Study Time",
+            "student": "Student",
+            "teacherMode": "Teacher Mode",
+            "aiGenerated": "AI Generated",
+            "takeQuiz": "Take a Quiz"
+        },
+        "todaySchedule": "Today's Schedule",
+        "noSessions": "No sessions today.",
+        "openPlanner": "Open Planner",
+        "schedule": {
+            "title": "Weekly Study Planner",
+            "description": "Organize your study sessions and stay on track for your exams with our specialized planning tool.",
+            "openPlanner": "Open Planner",
+            "nextClass": "Next Class",
+            "mathSession": "Mathematics 10:00 AM"
+        },
+        "modules": {
+            "title": "Learning Modules",
+            "math": "Mathematics",
+            "physics": "Physics",
+            "science": "Natural Sciences",
+            "coursesDesc": "Browse materials for your Bac type.",
+            "aiDesc": "Chat with your personal AI tutor.",
+            "quizDesc": "Generate a quiz from your courses."
+        },
+        "recentActivity": {
+            "title": "Recent Activity",
+            "quizCompleted": "Quiz Completed",
+            "fileViewed": "File Viewed"
+        }
+    },
+    "Courses": {
+        "title": "Bac {type} Courses",
+        "description": "All course materials prepared for your Baccalaureate type.",
+        "searchPlaceholder": "Search courses...",
+        "noCoursesFound": "No courses found",
+        "emptyMaterials": "Your teacher has not uploaded any materials yet. Check back soon.",
+        "adjustFilter": "Try adjusting your search or subject filter.",
+        "pdfDocument": "PDF Document"
+    },
+    "AI": {
+        "title": "AI Tutor",
+        "description": "Ask your AI tutor anything about your uploaded courses. All answers come directly from your syllabus.",
+        "loadingChat": "Loading chat...",
+        "quotaWarning": "If you see a quota error, click Setup Model in the chat header to switch to a free provider like Groq.",
+        "online": "Online",
+        "courseContext": "Answers are focused on this course's content.",
+        "placeholder": "Ask about your courses...",
+        "errorMessage": "I am sorry, I am not available at the moment. Please try again in a few seconds.",
+        "initialMessage": "Hello! I am your Baccalaureate Preparation Assistant. Ask me anything about your courses — I am here to help you understand lessons, practice exercises, and prepare for your exams.",
+        "quickActions": {
+            "explain": "Explain Simply",
+            "explainPrompt": "Can you explain this lesson simply?",
+            "exercise": "Give me an Exercise",
+            "exercisePrompt": "Can you give me a practice exercise from this course?",
+            "keyPoints": "Key Points",
+            "keyPointsPrompt": "What are the key points I should remember?"
+        }
+    },
+    "Quiz": {
+        "title": "Practice Quiz",
+        "description": "AI generates a quiz from your course material.",
+        "selectCourse": "Select a course",
+        "noCourses": "No courses available yet. Your teacher hasn't uploaded any materials.",
+        "generate": "Generate Quiz with AI",
+        "generating": "Generating your quiz...",
+        "loadingSubtext": "The AI is reading your course material",
+        "questionCount": "Question {current} of {total}",
+        "results": {
+            "excellent": "🎉 Excellent work!",
+            "good": "👍 Good effort!",
+            "keepStudying": "📚 Keep studying!",
+            "correctCount": "{correct} / {total} correct",
+            "saving": "Saving progress...",
+            "tryAnother": "Try Another Quiz"
+        }
+    },
+    "Admin": {
+        "title": "Admin Dashboard",
+        "description": "Manage courses and content for Bac C & D students.",
+        "uploadNew": "Upload New Course",
+        "courseTitle": "Course Title",
+        "subject": "Subject",
+        "studentType": "Student Type",
+        "pdfFile": "PDF File",
+        "uploadPlaceholder": "Upload a file",
+        "uploadLimit": "PDF up to 10MB",
+        "processing": "Processing RAG...",
+        "uploadButton": "Upload Course",
+        "recentlyUploaded": "Recently Uploaded",
+        "noUploads": "No courses uploaded yet.",
+        "deleteConfirm": "Are you sure you want to delete this course and all its embeddings?",
+        "deleteSuccess": "Course deleted successfully",
+        "uploadSuccess": "Course uploaded and processed successfully!",
+        "selectFileError": "Please select a PDF file.",
+        "bacType": "Bac {type}"
+    },
+    "Planner": {
+        "title": "Study Planner",
+        "description": "Manage your time and optimize your revisions.",
+        "addSession": "Add session",
+        "generatePlan": "Generate plan with AI",
+        "empty": "No sessions planned for today.",
+        "form": {
+            "title": "Title",
+            "subject": "Subject",
+            "date": "Date",
+            "startTime": "Start Time",
+            "endTime": "End Time"
+        }
+    },
+    "Auth": {
+        "login": "Login",
+        "register": "Register",
+        "email": "Email",
+        "password": "Password",
+        "studentType": "Bac Series",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signInToDashboard": "Sign in to Dashboard",
+        "createAccount": "Create Account",
+        "loginLandingTitle": "Learn smarter. Score higher.",
+        "loginLandingDescription": "Ask your AI tutor anything about your courses. Get instant explanations, exercises, and feedback — powered by your own syllabus.",
+        "featureAiAssistant": "AI Assistant",
+        "featureSmartQuizzes": "Smart Quizzes",
+        "featureRagCourses": "RAG Courses",
+        "featureUploadPdfs": "Upload PDFs",
+        "registerLandingTitle": "Start your journey today.",
+        "registerLandingDescription": "Upload your courses, chat with your AI tutor, and practice with smart quizzes designed around your exact syllabus.",
+        "registerLandingSubtext": "Join thousands of students preparing smarter.",
+        "loginPrompt": "Sign in to continue your learning journey.",
+        "registerPrompt": "Start your journey to excellence today.",
+        "forgotPassword": "Forgot?",
+        "seriesC": "Math & Physics",
+        "seriesD": "Bio & Chemistry",
+        "selectSeriesError": "Please select your Baccalaureate type.",
+        "accountCreated": "Account created! Redirecting to sign in...",
+        "startLearning": "Start Learning Now"
+    },
+    "Metadata": {
+        "title": "PassBac — AI-Powered Exam Preparation",
+        "description": "Ace your Baccalaureate with AI-powered learning, courses, and quizzes."
+    }
+}

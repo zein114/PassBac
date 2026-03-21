@@ -40,16 +40,16 @@ export default function LoginPage() {
                 </div>
                 <div>
                     <h1 className="text-5xl font-extrabold leading-tight mb-6">
-                        Learn smarter.<br />Score higher.
+                        {t('loginLandingTitle')}
                     </h1>
                     <p className="text-white/80 text-lg leading-relaxed max-w-md">
-                        Ask your AI tutor anything about your courses. Get instant explanations, exercises, and feedback — powered by your own syllabus.
+                        {t('loginLandingDescription')}
                     </p>
                     <div className="flex gap-6 mt-10">
                         {[
-                            { icon: <Brain className="w-5 h-5" />, label: 'AI Assistant' },
-                            { icon: <Sparkles className="w-5 h-5" />, label: 'Smart Quizzes' },
-                            { icon: <BookOpenCheck className="w-5 h-5" />, label: 'RAG Courses' }
+                            { icon: <Brain className="w-5 h-5" />, label: t('featureAiAssistant') },
+                            { icon: <Sparkles className="w-5 h-5" />, label: t('featureSmartQuizzes') },
+                            { icon: <BookOpenCheck className="w-5 h-5" />, label: t('featureRagCourses') }
                         ].map((f, i) => (
                             <div key={i} className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-medium border border-white/10 shadow-sm">
                                 {f.icon}{f.label}
@@ -57,7 +57,7 @@ export default function LoginPage() {
                         ))}
                     </div>
                 </div>
-                <p className="text-white/40 text-sm">© 2026 BacPrep. All rights reserved.</p>
+                <p className="text-white/40 text-sm">© 2026 {tc('title')}. All rights reserved.</p>
             </div>
 
             {/* Right panel — form */}
@@ -70,7 +70,7 @@ export default function LoginPage() {
                     </div>
 
                     <h2 className="text-3xl font-extrabold text-gray-900">{t('login')}</h2>
-                    <p className="mt-2 text-gray-500 text-sm">Sign in to continue your learning journey.</p>
+                    <p className="mt-2 text-gray-500 text-sm">{t('loginPrompt')}</p>
 
                     <div className="mt-8 bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
                         <LoginForm />

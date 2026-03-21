@@ -10,42 +10,180 @@
         "logout": "Déconnexion",
         "loading": "Chargement...",
         "error": "Une erreur est survenue",
-        "save": "Enregistrer",
+        "save": "Sauvegarder",
         "cancel": "Annuler",
         "delete": "Supprimer",
         "completed": "Terminé",
-        "pending": "En attente"
+        "pending": "En attente",
+        "tagline": "Excellence dans l'Éducation",
+        "systemStatus": "Système Opérationnel",
+        "viewPdf": "Voir le PDF",
+        "askAi": "Demander à l'IA",
+        "open": "Ouvrir",
+        "viewAll": "Tout voir",
+        "quickActions": "Actions Rapides",
+        "subjects": {
+            "all": "Tout",
+            "mathematics": "Mathématiques",
+            "physics": "Physique",
+            "science": "Sciences"
+        }
     },
     "Dashboard": {
-        "welcome": "Bonjour",
+        "title": "Tableau de Bord Étudiant",
+        "welcome": "Bienvenue",
+        "description": "Votre progression en un coup d'œil.",
+        "heroDescription": "Votre plateforme de préparation au Bac est prête. Commencez à apprendre, interrogez votre tuteur IA et entraînez-vous avec des quiz.",
+        "askAiNow": "Demander à l'IA",
         "stats": {
             "courses": "Cours consultés",
             "quizzes": "Quiz terminés",
             "accuracy": "Précision moyenne",
-            "sessions": "Sessions aujourd'hui"
+            "sessions": "Sessions aujourd'hui",
+            "totalCourses": "Total des Cours",
+            "progressPoints": "Points de Progression",
+            "quizScore": "Moyenne Quiz",
+            "studyTime": "Temps d'étude",
+            "student": "Étudiant",
+            "teacherMode": "Mode Prof",
+            "aiGenerated": "Généré par l'IA",
+            "takeQuiz": "Faire un Quiz"
         },
-        "todaySchedule": "Planning d'aujourd'hui"
+        "todaySchedule": "Programme du Jour",
+        "noSessions": "Aucune session aujourd'hui.",
+        "openPlanner": "Ouvrir le Planning",
+        "schedule": {
+            "title": "Planning d'Étude Hebdomadaire",
+            "description": "Organisez vos sessions d'étude et restez sur la bonne voie pour vos examens.",
+            "openPlanner": "Ouvrir le Planning",
+            "nextClass": "Prochain Cours",
+            "mathSession": "Mathématiques 10:00"
+        },
+        "modules": {
+            "title": "Modules d'Apprentissage",
+            "math": "Mathématiques",
+            "physics": "Physique",
+            "science": "Sciences Naturelles",
+            "coursesDesc": "Parcourez les supports pour votre type de Bac.",
+            "aiDesc": "Discutez avec votre tuteur IA personnel.",
+            "quizDesc": "Générez un quiz à partir de vos cours."
+        },
+        "recentActivity": {
+            "title": "Activité Récente",
+            "quizCompleted": "Quiz Terminé",
+            "fileViewed": "Fichier Consulté"
+        }
+    },
+    "Courses": {
+        "title": "Cours du Bac {type}",
+        "description": "Tous les supports de cours préparés pour votre type de Bac.",
+        "searchPlaceholder": "Rechercher des cours...",
+        "noCoursesFound": "Aucun cours trouvé",
+        "emptyMaterials": "Votre professeur n'a pas encore mis de support. Revenez bientôt.",
+        "adjustFilter": "Essayez d'ajuster votre recherche ou filtre par matière.",
+        "pdfDocument": "Document PDF"
+    },
+    "AI": {
+        "title": "Tuteur IA",
+        "description": "Posez n'importe quelle question à votre tuteur IA sur vos cours. Toutes les réponses proviennent directement de votre programme.",
+        "loadingChat": "Chargement du chat...",
+        "quotaWarning": "Si vous voyez une erreur de quota, cliquez sur Configuration dans l'en-tête du chat pour passer à un fournisseur gratuit comme Groq.",
+        "online": "En ligne",
+        "courseContext": "Les réponses sont concentrées sur le contenu de ce cours.",
+        "placeholder": "Posez une question sur vos cours...",
+        "errorMessage": "Je suis désolé, je ne suis pas disponible pour le moment. Veuillez réessayer dans quelques secondes.",
+        "initialMessage": "Bonjour ! Je suis votre assistant de préparation au Baccalauréat. Posez-moi vos questions — je suis là pour vous aider à comprendre, pratiquer et réussir vos examens.",
+        "quickActions": {
+            "explain": "Expliquer Simplement",
+            "explainPrompt": "Peux-tu m'expliquer cette leçon simplement ?",
+            "exercise": "Donner un Exercice",
+            "exercisePrompt": "Peux-tu me donner un exercice d'application de ce cours ?",
+            "keyPoints": "Points Clés",
+            "keyPointsPrompt": "Quels sont les points clés à retenir ?"
+        }
+    },
+    "Quiz": {
+        "title": "Quiz d'Entraînement",
+        "description": "L'IA génère un quiz à partir de vos supports de cours.",
+        "selectCourse": "Sélectionner un cours",
+        "noCourses": "Aucun cours disponible. Votre professeur n'a pas encore mis de supports.",
+        "generate": "Générer le Quiz avec l'IA",
+        "generating": "Génération de votre quiz...",
+        "loadingSubtext": "L'IA analyse votre support de cours",
+        "questionCount": "Question {current} sur {total}",
+        "results": {
+            "excellent": "🎉 Excellent travail !",
+            "good": "👍 Bel effort !",
+            "keepStudying": "📚 Continuez vos révisions !",
+            "correctCount": "{correct} / {total} corrects",
+            "saving": "Sauvegarde en cours...",
+            "tryAnother": "Essayer un autre Quiz"
+        }
+    },
+    "Admin": {
+        "title": "Tableau de Bord Admin",
+        "description": "Gérez les cours et le contenu pour les élèves de Bac C & D.",
+        "uploadNew": "Ajouter un Nouveau Cours",
+        "courseTitle": "Titre du Cours",
+        "subject": "Matière",
+        "studentType": "Type d'Élève",
+        "pdfFile": "Fichier PDF",
+        "uploadPlaceholder": "Choisir un fichier",
+        "uploadLimit": "PDF jusqu'à 10 Mo",
+        "processing": "Traitement RAG...",
+        "uploadButton": "Ajouter le Cours",
+        "recentlyUploaded": "Ajouts Récents",
+        "noUploads": "Aucun cours ajouté pour le moment.",
+        "deleteConfirm": "Voulez-vous vraiment supprimer ce cours et toutes ses données ?",
+        "deleteSuccess": "Cours supprimé avec succès",
+        "uploadSuccess": "Cours ajouté et traité avec succès !",
+        "selectFileError": "Veuillez sélectionner un fichier PDF.",
+        "bacType": "Bac {type}"
     },
     "Planner": {
-        "title": "Planning d'Études",
+        "title": "Planning d'Étude",
+        "description": "Gérez votre temps et optimisez vos révisions.",
         "addSession": "Ajouter une session",
-        "generatePlan": "Générer un plan avec l'IA",
-        "empty": "Aucune session prévue pour cette journée.",
+        "generatePlan": "Générer un planning par IA",
+        "empty": "Aucune session prévue aujourd'hui.",
         "form": {
             "title": "Titre",
             "subject": "Matière",
             "date": "Date",
-            "startTime": "Heure de début",
-            "endTime": "Heure de fin"
+            "startTime": "Heure de Début",
+            "endTime": "Heure de Fin"
         }
     },
     "Auth": {
         "login": "Connexion",
         "register": "Inscription",
-        "email": "Email",
+        "email": "E-mail",
         "password": "Mot de passe",
         "studentType": "Série du Bac",
         "noAccount": "Pas de compte ?",
-        "hasAccount": "Déjà un compte ?"
+        "hasAccount": "Déjà un compte ?",
+        "signInToDashboard": "Aller au Tableau de Bord",
+        "createAccount": "Créer un compte",
+        "loginLandingTitle": "Apprenez mieux. Réussissez plus.",
+        "loginLandingDescription": "Posez n'importe quelle question à votre tuteur IA sur vos cours. Obtenez des explications, des exercices et des retours instantanés — basés sur votre propre programme.",
+        "featureAiAssistant": "Assistant IA",
+        "featureSmartQuizzes": "Quiz Intelligents",
+        "featureRagCourses": "Cours RAG",
+        "featureUploadPdfs": "Dépôt PDF",
+        "registerLandingTitle": "Commencez votre voyage dès aujourd'hui.",
+        "registerLandingDescription": "Téléchargez vos cours, discutez avec votre tuteur IA et entraînez-vous avec des quiz intelligents conçus autour de votre programme exact.",
+        "registerLandingSubtext": "Rejoignez des milliers d'étudiants qui se préparent mieux.",
+        "loginPrompt": "Connectez-vous pour continuer votre apprentissage.",
+        "registerPrompt": "Commencez votre voyage vers l'excellence dès aujourd'hui.",
+        "forgotPassword": "Oublié ?",
+        "seriesC": "Maths & Physique",
+        "seriesD": "Bio & Chimie",
+        "selectSeriesError": "Veuillez sélectionner votre série de Bac.",
+        "accountCreated": "Compte créé ! Redirection vers la connexion...",
+        "startLearning": "Commencer à Apprendre"
+    },
+    "Metadata": {
+        "title": "PassBac — Préparation aux Examens par l'IA",
+        "description": "Réussissez votre Baccalauréat avec l'apprentissage propulsé par l'IA, des cours et des quiz."
     }
 }
