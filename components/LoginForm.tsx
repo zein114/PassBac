@@ -13,14 +13,14 @@ export default function LoginForm() {
     const router = useRouter();
     const supabase = createClient();
 
-    const handleLogin = async (e?: React.FormEvent, demoEmail?: string, demoPassword?: string) => {
-        if (e) e.preventDefault();
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
         setLoading(true);
         setError(null);
 
-        const { error, data } = await supabase.auth.signInWithPassword({
-            email: demoEmail || email,
-            password: demoPassword || password,
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
         });
 
         if (error) {
@@ -99,26 +99,6 @@ export default function LoginForm() {
                     )}
                 </button>
             </form>
-
-            <div className="relative py-2">
-                <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-3 text-gray-400 font-bold tracking-widest">OR</span>
-                </div>
-            </div>
-
-            <button
-                onClick={() => handleLogin(undefined, 'demo@test.com', 'demo')}
-                disabled={loading}
-                className="w-full py-3 px-4 bg-white border-2 border-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-indigo-100 hover:text-indigo-600 transition-all flex items-center justify-center gap-2 group transform active:scale-[0.98]"
-            >
-                <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
-                    <Zap className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                </div>
-                Continue with Demo Access
-            </button>
         </div>
     );
 }

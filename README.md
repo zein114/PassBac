@@ -1,7 +1,7 @@
-# 🎓 BacPrep: The ultimate AI-Powered Baccalaureate Assistant
+# 🎓 PassBac: The ultimate AI-Powered Baccalaureate Assistant
 > **Status**: Production-Ready & Optimized for Next.js 16.2 (Turbopack)
 
-BacPrep is a high-performance, full-stack educational platform designed to transform Baccalaureate preparation through cutting-edge AI and a refined user experience.
+PassBac is a high-performance, full-stack educational platform designed to transform Baccalaureate preparation through cutting-edge AI and a refined user experience.
 
 ---
 
@@ -16,7 +16,7 @@ The AI assistant is a **context-aware tutor** grounded in your specific course m
   - 🔑 **Key Points**: Instantly extracts the top 5 takeaways from a course.
 - **Course-Scoped Knowledge**: Scopes AI knowledge to the active course to prevent study confusion.
 
-### � Interactive Quiz & Progress
+### 📝 Interactive Quiz & Progress
 - **AI Quiz Generation**: Automatically generates multiple-choice questions (QCM) from course content.
 - **Real-Time Performance**: Tracks accuracy, quiz counts, and completion status.
 - **Dynamic Stats Dashboard**: Students see their progress visualized with real-time data from Supabase.
@@ -26,7 +26,7 @@ The AI assistant is a **context-aware tutor** grounded in your specific course m
 - **Student Segmentation**: Categorize materials specifically for **Bac C** or **Bac D** students.
 - **Resource Control**: Fully managed interface to view, upload, or delete courses and their AI data.
 
-### � Advanced Authentication
+### 🔒 Advanced Authentication
 - **Next.js 16/Proxy Engine**: Built on the latest experimental `proxy.ts` architecture for maximum speed and security.
 - **Role-Based Access (RBAC)**: Strict server-side redirection for admin routes.
 - **Auto-Sync Profiles**: A database trigger automatically sets up student profiles and progress trackers upon registration.
@@ -66,12 +66,6 @@ ADMIN_SECRET=... # Secure API access
 npm install
 npm run dev
 ```
-
----
-
-## � Credentials
-- **Admin**: `admin@test.com` / `admin123`
-- **Demo Student**: `demo@test.com` / `demo123`
 
 ---
 *Created for the S3C Defi 4 — Elevating Baccalaureate Education through AI.*
