@@ -65,12 +65,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const signOut = async () => {
-        // 1. Call server-side signout to clear cookies
-        await fetch('/api/auth/signout', { method: 'POST' });
-        // 2. Clear client-side session just in case
-        await supabase.auth.signOut();
-        // 3. Force a full page reload to /login for a clean state
-        window.location.href = '/login';
+        try {
+            // 1. Call server-side signout to clear cookies
+            await fetch('/api/auth/signout', { method: 'POST' });
+            // 2. Clear client-side session
+            await supabase.auth.signOut();
+            // 3. Force a full page reload to /login for a clean state
+            window.location.replace('/login');
+        } catch (error) {
+            console.error('Sign out error:', error);
+            // Fallback to direct redirect
+            window.location.replace('/login');
+        }
     };
 
     return (

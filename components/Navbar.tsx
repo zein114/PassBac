@@ -142,6 +142,16 @@ export function Navbar({ locale }: { locale: string }) {
                                 </Link>
                             );
                         })}
+                        <button
+                            onClick={() => {
+                                setIsMenuOpen(false);
+                                signOut();
+                            }}
+                            className="px-4 py-3 rounded-2xl text-sm font-bold flex items-center gap-3 text-red-600 hover:bg-red-50 transition-all mt-2 border border-red-100/50"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            <span>{tc('logout')}</span>
+                        </button>
                     </div>
                 </div>
             )}
