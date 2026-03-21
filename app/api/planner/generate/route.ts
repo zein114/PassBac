@@ -44,18 +44,23 @@ export async function POST(request: Request) {
 Generate a balanced weekly study plan for a student in "Série ${profile?.student_type || 'C'}".
 The plan must be for 7 days.
 For each day, provide 2 sessions.
-Subjects allowed: Mathematics, Physics, Science.
 
-Return ONLY a JSON array of objects:
-[
-  {
-    "title": "Topic description",
-    "subject": "Mathematics",
-    "date": "YYYY-MM-DD",
-    "start_time": "HH:MM",
-    "end_time": "HH:MM"
-  }
-]
+IMPORTANT RULES:
+1. Use ONLY these exact subject names: "Mathematics", "Physics", "Science". NOTHING ELSE.
+2. The response must be a valid JSON object with a "sessions" key containing an array of sessions.
+
+Example format:
+{
+  "sessions": [
+    {
+      "title": "Complex Numbers Practice",
+      "subject": "Mathematics",
+      "date": "2026-03-21",
+      "start_time": "09:00",
+      "end_time": "11:00"
+    }
+  ]
+}
 
 Respond in ${language}. Date should start from today.`
 
@@ -67,17 +72,36 @@ Respond in ${language}. Date should start from today.`
         })
 
         const content = completion.choices[0].message.content
-        const sessions = JSON.parse(content || '{}').sessions || JSON.parse(content || '[]')
+        console.log('AI Planner Response:', content)
+
+        const parsed = JSON.parse(content || '{}')
+        const sessions = parsed.sessions || (Array.isArray(parsed) ? parsed : [])
+
+        if (sessions.length === 0) {
+            throw new Error('AI returned an empty or invalid schedule.')
+        }
 
         // Insert into database
         const { data, error } = await supabase
             .from('study_sessions')
-            .insert(sessions.map((s: any) => ({ ...s, user_id: user.id })))
+            .insert(sessions.map((s: any) => ({
+                user_id: user.id,
+                title: s.title || 'Study Session',
+                subject: s.subject || 'Mathematics',
+                date: s.date,
+                start_time: s.start_time,
+                end_time: s.end_time,
+                status: 'pending'
+            })))
             .select()
 
-        if (error) throw error
+        if (error) {
+            console.error('DB Insert Error:', error)
+            throw error
+        }
         return NextResponse.json(data)
     } catch (error: any) {
+        console.error('Planner Generate Error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }

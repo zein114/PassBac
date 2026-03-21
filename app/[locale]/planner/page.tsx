@@ -14,7 +14,7 @@ interface Session {
     status: 'pending' | 'completed';
 }
 
-export default function PlannerPage({ params }: { params: { locale: string } }) {
+export default function PlannerPage({ params }: { params: Promise<{ locale: string }> }) {
     const t = useTranslations();
     const [sessions, setSessions] = useState<Session[]>([]);
     const [loading, setLoading] = useState(true);
@@ -103,9 +103,13 @@ export default function PlannerPage({ params }: { params: { locale: string } }) 
             });
             if (res.ok) {
                 fetchSessions();
+            } else {
+                const err = await res.json();
+                console.error('AI generation failed:', err.error);
+                alert('Generation error: ' + err.error);
             }
         } catch (error) {
-            console.error('AI generation failed', error);
+            console.error('AI generation network error', error);
         } finally {
             setIsGenerating(false);
         }
@@ -196,7 +200,7 @@ export default function PlannerPage({ params }: { params: { locale: string } }) 
                                             </h3>
                                             <div className="flex items-center gap-3 mt-1 text-sm text-slate-500">
                                                 <span className={`px-2 py-0.5 rounded-md ${session.subject === 'Mathematics' ? 'bg-indigo-50 text-indigo-600' :
-                                                        session.subject === 'Physics' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
+                                                    session.subject === 'Physics' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
                                                     }`}>
                                                     {session.subject}
                                                 </span>
