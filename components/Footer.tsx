@@ -98,11 +98,10 @@ export function Footer() {
                                         <button
                                             key={lang.code}
                                             onClick={() => handleLanguageChange(lang.code)}
-                                            className={`flex items-center justify-between px-4 py-3 text-sm transition-colors text-left w-full ${
-                                                locale === lang.code
-                                                    ? 'bg-indigo-50 text-indigo-700 font-bold'
-                                                    : 'text-gray-600 hover:bg-gray-50 font-medium'
-                                            }`}
+                                            className={`flex items-center justify-between px-4 py-3 text-sm transition-colors text-left w-full ${locale === lang.code
+                                                ? 'bg-indigo-50 text-indigo-700 font-bold'
+                                                : 'text-gray-600 hover:bg-gray-50 font-medium'
+                                                }`}
                                         >
                                             {lang.label}
                                             {locale === lang.code && <Check className="w-4 h-4 text-indigo-600" />}
@@ -115,19 +114,8 @@ export function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="pt-8 border-t border-gray-100 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
+                <div className="pt-8 border-t border-gray-100 flex items-center justify-center">
                     <p className="text-sm text-gray-400 font-medium tracking-wide">© {currentYear} PassBac. All rights reserved.</p>
-
-                    {/* Status Indicator */}
-                    <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:border-indigo-100 hover:shadow-md transition-all group cursor-default">
-                        <div className="relative flex h-2.5 w-2.5 items-center justify-center">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </div>
-                        <span className="text-[11px] font-bold text-gray-600 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">
-                            {t('systemStatus') || 'System Operational'}
-                        </span>
-                    </div>
                 </div>
             </div>
         </footer>

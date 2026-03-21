@@ -64,9 +64,6 @@ export default function LoginForm() {
                 <div>
                     <div className="flex items-center justify-between mb-2">
                         <label className="block text-sm font-semibold text-gray-700">{t('password')}</label>
-                        <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
-                            {t('forgotPassword')}
-                        </button>
                     </div>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">

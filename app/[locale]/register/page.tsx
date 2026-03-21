@@ -37,38 +37,43 @@ export default function RegisterPage() {
                 .animation-delay-2000 { animation-delay: 2s; }
                 .animation-delay-4000 { animation-delay: 4s; }
             `}</style>
-            
+
             {/* Absolute Language Selector Top Right */}
             <div className="absolute top-6 right-6 z-50">
                 <LanguageSelector />
             </div>
 
             {/* Left panel — brand */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 flex-col justify-between p-12 text-white relative overflow-hidden">
+            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-cyan-500 flex-col justify-between p-12 text-white relative overflow-hidden">
                 {/* Animated Background Blobs */}
-                <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-overlay filter blur-2xl opacity-40 animate-blob" />
-                <div className="absolute top-0 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-overlay filter blur-2xl opacity-40 animate-blob animation-delay-2000" />
-                <div className="absolute -bottom-8 left-20 w-80 h-80 bg-fuchsia-300 rounded-full mix-blend-overlay filter blur-2xl opacity-40 animate-blob animation-delay-4000" />
+                <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob" />
+                <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000" />
+                <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000" />
 
                 <div className="relative z-10 flex items-center gap-3">
                     <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/20 p-1.5">
-                        <BookOpenCheck className="w-6 h-6 text-white" />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src="/logo.png"
+                            alt="Logo"
+                            className="w-full h-full object-cover rounded-full"
+                        />
                     </div>
                     <span className="text-xl font-bold tracking-tight">{tc('title')}</span>
                 </div>
-                
+
                 <div className="relative z-10">
                     <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-sm">
-                        {t('registerLandingTitle')}
+                        {t('loginLandingTitle')}
                     </h1>
                     <p className="text-white/90 text-lg leading-relaxed max-w-md font-medium">
-                        {t('registerLandingDescription')}
+                        {t('loginLandingDescription')}
                     </p>
                     <div className="flex flex-wrap gap-4 mt-10">
                         {[
                             { icon: <Brain className="w-5 h-5 text-indigo-200" />, label: t('featureAiAssistant') },
                             { icon: <Sparkles className="w-5 h-5 text-purple-200" />, label: t('featureSmartQuizzes') },
-                            { icon: <BookOpenCheck className="w-5 h-5 text-cyan-200" />, label: t('featureUploadPdfs') }
+                            { icon: <BookOpenCheck className="w-5 h-5 text-cyan-200" />, label: t('featureRagCourses') }
                         ].map((f, i) => (
                             <div key={i} className="flex items-center gap-2.5 bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-full text-sm font-semibold border border-white/20 shadow-xl transition-transform hover:scale-105">
                                 {f.icon}{f.label}
