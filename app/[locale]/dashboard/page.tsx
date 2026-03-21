@@ -78,17 +78,17 @@ export default function Dashboard() {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
             {/* Hero banner */}
-            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-cyan-500 p-8 md:p-12 shadow-xl shadow-indigo-200/50">
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-cyan-500 p-6 md:p-12 shadow-xl shadow-indigo-200/50">
                 <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">Bac {profile.student_type}</span>
+                            <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Bac {profile.student_type}</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-extrabold text-white capitalize">{t('welcome')}, {firstName}!</h1>
-                        <p className="text-white/60 mt-2 text-sm max-w-md">Your personalized Baccalaureate prep platform is ready. Start learning, ask your AI tutor, and practice with real quizzes.</p>
+                        <h1 className="text-2xl md:text-4xl font-extrabold text-white capitalize">{t('welcome')}, {firstName}!</h1>
+                        <p className="text-white/70 mt-2 text-xs md:text-sm max-w-md leading-relaxed">Your personalized Baccalaureate prep platform is ready. Start learning, ask your AI tutor, and practice with real quizzes.</p>
                     </div>
-                    <Link href="/ai" className="flex-shrink-0 flex items-center gap-2 bg-white/20 hover:bg-white/30 transition text-white font-semibold px-6 py-3 rounded-2xl backdrop-blur-sm border border-white/30 shadow">
+                    <Link href="/ai" className="flex-shrink-0 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 transition text-white font-bold px-6 py-4 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg text-sm md:text-base">
                         <Sparkles className="w-5 h-5" /> Ask AI now
                     </Link>
                 </div>

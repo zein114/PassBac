@@ -136,18 +136,18 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                     <p className="text-slate-500 mt-1">Gère ton temps et optimise tes révisions.</p>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-3">
                     <button
                         onClick={generateWithAI}
                         disabled={isGenerating}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-medium hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-2xl font-bold hover:bg-indigo-100 transition-colors disabled:opacity-50 text-sm flex-1 sm:flex-none"
                     >
                         {isGenerating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                         {t('Planner.generatePlan')}
                     </button>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 text-sm flex-1 sm:flex-none"
                     >
                         <Plus className="w-5 h-5" />
                         {t('Planner.addSession')}
@@ -228,7 +228,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
             {/* Modal Simple */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+                    <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto scrollbar-hide">
                         <h2 className="text-xl font-bold text-slate-900 mb-6">{t('Planner.addSession')}</h2>
                         <form onSubmit={handleAddSession} className="space-y-4">
                             <div>
