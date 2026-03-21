@@ -201,21 +201,34 @@ end;
 $$;
 
 -- ============================================================
--- 7. Supabase Storage Bucket for PDFs
+-- 8. STUDY SESSIONS TABLE
+-- ============================================================
+create table if not exists study_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null,
+  subject text not null check (subject in ('Mathematics', 'Physics', 'Science')),
+  date date not null,
+  start_time time not null,
+  end_time time not null,
+  status text not null default 'pending' check (status in ('pending', 'completed')),
+  created_at timestamp with time zone default timezone('utc', now()) not null
+);
+
+-- RLS for study_sessions
+alter table study_sessions enable row level security;
+
+do $$ begin
+  drop policy if exists "Users can manage own study sessions" on study_sessions;
+end $$;
+
+create policy "Users can manage own study sessions"
+  on study_sessions for all
+  using (auth.uid() = user_id);
+
+-- ============================================================
+-- 9. Supabase Storage Bucket for PDFs (REPEATED FOR SAFETY)
 -- ============================================================
 insert into storage.buckets (id, name, public)
 values ('courses', 'courses', true)
 on conflict (id) do nothing;
-
-do $$ begin
-  drop policy if exists "Public read access to course PDFs" on storage.objects;
-  drop policy if exists "Service role can upload PDFs" on storage.objects;
-end $$;
-
-create policy "Public read access to course PDFs"
-  on storage.objects for select
-  using (bucket_id = 'courses');
-
-create policy "Service role can upload PDFs"
-  on storage.objects for insert
-  with check (bucket_id = 'courses' and auth.role() = 'service_role');

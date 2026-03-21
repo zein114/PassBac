@@ -1,0 +1,51 @@
+{
+    "Common": {
+        "title": "BacPrep",
+        "dashboard": "Tableau de Bord",
+        "courses": "Cours",
+        "aiTutor": "Tuteur IA",
+        "quiz": "Quiz",
+        "planner": "Planning",
+        "admin": "Admin",
+        "logout": "Déconnexion",
+        "loading": "Chargement...",
+        "error": "Une erreur est survenue",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "completed": "Terminé",
+        "pending": "En attente"
+    },
+    "Dashboard": {
+        "welcome": "Bonjour",
+        "stats": {
+            "courses": "Cours consultés",
+            "quizzes": "Quiz terminés",
+            "accuracy": "Précision moyenne",
+            "sessions": "Sessions aujourd'hui"
+        },
+        "todaySchedule": "Planning d'aujourd'hui"
+    },
+    "Planner": {
+        "title": "Planning d'Études",
+        "addSession": "Ajouter une session",
+        "generatePlan": "Générer un plan avec l'IA",
+        "empty": "Aucune session prévue pour cette journée.",
+        "form": {
+            "title": "Titre",
+            "subject": "Matière",
+            "date": "Date",
+            "startTime": "Heure de début",
+            "endTime": "Heure de fin"
+        }
+    },
+    "Auth": {
+        "login": "Connexion",
+        "register": "Inscription",
+        "email": "Email",
+        "password": "Mot de passe",
+        "studentType": "Série du Bac",
+        "noAccount": "Pas de compte ?",
+        "hasAccount": "Déjà un compte ?"
+    }
+}

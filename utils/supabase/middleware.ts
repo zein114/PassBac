@@ -1,8 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function updateSession(request: NextRequest) {
-    let supabaseResponse = NextResponse.next({
+export async function updateSession(request: NextRequest, response?: NextResponse) {
+    let supabaseResponse = response || NextResponse.next({
         request,
     })
 
@@ -16,7 +16,7 @@ export async function updateSession(request: NextRequest) {
                 },
                 setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-                    supabaseResponse = NextResponse.next({
+                    supabaseResponse = response || NextResponse.next({
                         request,
                     })
                     cookiesToSet.forEach(({ name, value, options }) =>
@@ -27,24 +27,25 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    // IMPORTANT: Avoid writing any logic between createServerClient and
-    // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-    // issues with users being randomly logged out.
-
     const {
         data: { user },
     } = await supabase.auth.getUser()
 
-    // Protect the routes
-    const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register')
-    const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
-    const isApiRoute = request.nextUrl.pathname.startsWith('/api/')
-    const isPublicRoute = request.nextUrl.pathname === '/' || isAuthRoute || isApiRoute
+    // Helper to check paths regardless of locale prefix
+    const path = request.nextUrl.pathname
+    const isAuthRoute = path.match(/^\/(fr|ar)\/(login|register)/) || path.startsWith('/login') || path.startsWith('/register')
+    const isAdminRoute = path.match(/^\/(fr|ar)\/admin/) || path.startsWith('/admin')
+    const isDashboardRoute = path.match(/^\/(fr|ar)\/dashboard/) || path.startsWith('/dashboard')
+    const isApiRoute = path.startsWith('/api/')
+    const isRoot = path === '/' || path === '/fr' || path === '/ar' || path === '/fr/' || path === '/ar/'
+
+    const isPublicRoute = isRoot || isAuthRoute || isApiRoute
 
     if (!user && !isPublicRoute && !isAdminRoute) {
         // If user is not logged in, redirect to login page for protected routes
         const url = request.nextUrl.clone()
         const redirectTo = url.pathname + url.search
+        // We let next-intl handle the prefixing if we redirect to /login
         url.pathname = '/login'
         url.search = `?next=${encodeURIComponent(redirectTo)}`
         return NextResponse.redirect(url)
@@ -60,7 +61,6 @@ export async function updateSession(request: NextRequest) {
             return NextResponse.redirect(url)
         }
 
-        // Fetch profile to check if admin
         const { data: profile } = await supabase
             .from('profiles')
             .select('is_admin')
@@ -74,15 +74,8 @@ export async function updateSession(request: NextRequest) {
         }
     }
 
-    // Optional: If user is logged in, and tries to go to an auth page redirect to dashboard
-    if (user && isAuthRoute) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/dashboard'
-        return NextResponse.redirect(url)
-    }
-
-    // Optional: If logged in user hits rool redirect to dashboard
-    if (user && request.nextUrl.pathname === '/') {
+    // If user is logged in and hits root or auth route, go to dashboard
+    if (user && (isRoot || isAuthRoute)) {
         const url = request.nextUrl.clone()
         url.pathname = '/dashboard'
         return NextResponse.redirect(url)

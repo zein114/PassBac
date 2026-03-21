@@ -1,12 +1,23 @@
 import { type NextRequest } from 'next/server'
-import { updateSession } from '@/utils/supabase/middleware'
-
 /**
  * Next.js 16 Proxy (formerly middleware)
  * Must export a function named 'proxy' or a default function.
  */
+import createIntlMiddleware from 'next-intl/middleware'
+import { updateSession } from '@/utils/supabase/middleware'
+
+const intlMiddleware = createIntlMiddleware({
+    locales: ['fr', 'ar'],
+    defaultLocale: 'fr',
+    localePrefix: 'always'
+})
+
 export async function proxy(request: NextRequest) {
-    return await updateSession(request)
+    // 1. Handle locale routing
+    const response = intlMiddleware(request)
+
+    // 2. Wrap with Supabase session management
+    return await updateSession(request, response)
 }
 
 export const config = {

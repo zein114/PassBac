@@ -1,0 +1,51 @@
+{
+    "Common": {
+        "title": "BacPrep",
+        "dashboard": "لوحة القيادة",
+        "courses": "الدروس",
+        "aiTutor": "مدرس الذكاء الاصطناعي",
+        "quiz": "اختبار",
+        "planner": "التخطيط",
+        "admin": "مسؤول",
+        "logout": "تسجيل الخروج",
+        "loading": "جاري التحميل...",
+        "error": "حدث خطأ ما",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "completed": "مكتمل",
+        "pending": "قيد الانتظار"
+    },
+    "Dashboard": {
+        "welcome": "مرحباً",
+        "stats": {
+            "courses": "الدروس المشاهدة",
+            "quizzes": "الاختبارات المنجزة",
+            "accuracy": "متوسط الدقة",
+            "sessions": "جلسات اليوم"
+        },
+        "todaySchedule": "جدول اليوم"
+    },
+    "Planner": {
+        "title": "تخطيط الدراسة",
+        "addSession": "إضافة جلسة",
+        "generatePlan": "إنشاء خطة بالذكاء الاصطناعي",
+        "empty": "لا توجد جلسات مقررة لهذا اليوم.",
+        "form": {
+            "title": "العنوان",
+            "subject": "المادة",
+            "date": "التاريخ",
+            "startTime": "وقت البدء",
+            "endTime": "وقت الانتهاء"
+        }
+    },
+    "Auth": {
+        "login": "تسجيل الدخول",
+        "register": "إنشاء حساب",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "studentType": "سلسلة البكالوريا",
+        "noAccount": "ليس لديك حساب؟",
+        "hasAccount": "لديك حساب بالفعل؟"
+    }
+}

@@ -28,16 +28,20 @@ export default function ChatBox() {
         e.preventDefault();
         if (!input.trim() || loading) return;
 
-        const userMessage = input.trim();
+        const userMessage: Message = { role: 'user', content: input };
+        setMessages((prev) => [...prev, userMessage]);
         setInput('');
-        setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
         setLoading(true);
 
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ messages: [...messages, { role: 'user', content: userMessage }], courseId }),
+                body: JSON.stringify({
+                    messages: [...messages, userMessage],
+                    courseId,
+                    locale: window.location.pathname.split('/')[1] || 'fr'
+                }),
             });
 
             const data = await res.json();

@@ -31,7 +31,9 @@ export async function POST(req: Request) {
 
     const studentType = (profile?.student_type as 'C' | 'D') || null;
 
-    const { messages, courseId } = await req.json();
+    const { messages, courseId, locale } = await req.json();
+    const language = locale === 'ar' ? 'Arabic' : 'French';
+
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage || lastMessage.role !== 'user') {
       return NextResponse.json({ error: 'Invalid messages' }, { status: 400 });
@@ -47,6 +49,7 @@ export async function POST(req: Request) {
     const contextText = chunks.map((c) => c.content).join('\n\n');
 
     const systemPrompt = `You are BacTutor, an expert teacher for Baccalaureate ${studentType ? `type ${studentType}` : ''} students.
+IMPORTANT: Respond ONLY in ${language}.
 
 Your role is to TEACH, not just answer. Follow these rules:
 1. Explain concepts step-by-step, like a patient teacher

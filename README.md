@@ -1,66 +1,64 @@
-# 🎓 BacPrep — Competition-Ready AI Baccalaureate Assistant
+# 🎓 BacPrep: The ultimate AI-Powered Baccalaureate Assistant
 > **Status**: Production-Ready & Optimized for Next.js 16.2 (Turbopack)
 
-BacPrep is a high-performance, full-stack educational platform designed to transform Baccalaureate preparation. It leverages **RAG (Retrieval-Augmented Generation)** to provide students with a private, course-specific AI Tutor that knows their curriculum perfectly.
+BacPrep is a high-performance, full-stack educational platform designed to transform Baccalaureate preparation through cutting-edge AI and a refined user experience.
 
 ---
 
-## 🚀 Key Production Features
+## 🌟 Key Functionalities & Features
 
-### 🔐 Advanced Authentication (Next.js 16/Proxy)
-- **Experimental Proxy Engine**: Fully compatible with Next.js 16's new `proxy.ts` convention.
-- **Role-Based Access Control (RBAC)**: Strict server-side redirection for `/admin` routes.
-- **Automatic Profile Sync**: Uses a database trigger in Supabase to instantly create student profiles (`Bac C/D`) upon registration.
-- **Smart Redirection**: Remembers your intended destination after login via `?next=` parameters.
-
-### 🤖 AI Teacher Mode (`/ai`)
-- **Direct Context RAG**: AI responses are strictly grounded in your uploaded PDF materials.
+### 🤖 AI Teacher Mode (Smart RAG)
+The AI assistant is a **context-aware tutor** grounded in your specific course materials.
+- **Retrieval-Augmented Generation (RAG)**: AI responses are strictly derived from your uploaded PDFs, ensuring accuracy and relevance.
 - **Interactive Quick Actions**:
-  - 💡 *Explain Simply*: Breaks down complex topics into "ELI5" language.
-  - 📝 *Give me an Exercise*: Generates practice problems based on current course context.
-  - 🔑 *Key Points*: Summarizes the most important concepts for quick revision.
+  - 💡 **Explain Simply**: Simplifies complex topics for easier understanding.
+  - 📝 **Give me an Exercise**: Generates a practice problem based on the current material.
+  - 🔑 **Key Points**: Instantly extracts the top 5 takeaways from a course.
+- **Course-Scoped Knowledge**: Scopes AI knowledge to the active course to prevent study confusion.
+
+### � Interactive Quiz & Progress
+- **AI Quiz Generation**: Automatically generates multiple-choice questions (QCM) from course content.
+- **Real-Time Performance**: Tracks accuracy, quiz counts, and completion status.
+- **Dynamic Stats Dashboard**: Students see their progress visualized with real-time data from Supabase.
 
 ### 👨‍💼 Professional Admin Suite (`/admin`)
-- **Content Pipeline**: Upload a PDF, and the system automatically extracts text, chunks it, and generates embeddings.
-- **Multi-Serie Support**: Categorize courses specifically for **Bac C** or **Bac D** students.
-- **Resource Management**: Real-time course deletion and storage synchronization.
+- **Automated Content Pipeline**: Upload a PDF, and the system handles text extraction, chunking, and vector embedding generation (RAG) automatically.
+- **Student Segmentation**: Categorize materials specifically for **Bac C** or **Bac D** students.
+- **Resource Control**: Fully managed interface to view, upload, or delete courses and their AI data.
 
-### 📈 Progress & Analytics
-- **Dynamic Dashboard**: Real-time stats for courses viewed, quizzes completed, and average scores.
-- **Integrated Quizzes**: Smart QCM generation from course content to test understanding instantly.
+### � Advanced Authentication
+- **Next.js 16/Proxy Engine**: Built on the latest experimental `proxy.ts` architecture for maximum speed and security.
+- **Role-Based Access (RBAC)**: Strict server-side redirection for admin routes.
+- **Auto-Sync Profiles**: A database trigger automatically sets up student profiles and progress trackers upon registration.
+- **Smart Flow**: Remembers your destination and redirects you back home after login via `?next=` parameters.
 
 ---
 
 ## 🛠️ Technical Excellence
-
-| Component | Technology |
-|-----------|------------|
-| **Core** | Next.js 16.2 (App Router + Turbopack) |
-| **Auth** | Supabase SSR (Safe Session Refresh) |
-| **DB** | PostgreSQL + `pgvector` for Semantic Search |
-| **AI** | OpenAI (Embeddings) + Groq (Llama 3.1 70B for Chat) |
-| **UI** | Modern CSS (Glassmorphism & Micro-animations) |
+- **Design**: Premium glassmorphic UI with micro-animations and a responsive, subject-tailored color system.
+- **Speed**: Optimized with **Groq & Llama 3.1 70B** for sub-2-second AI responses.
+- **Security**: Robust session management using `@supabase/ssr` (HTTP-only cookies).
+- **Search**: Semantic search powered by **OpenAI Embeddings** and **pgvector**.
 
 ---
 
 ## 📋 Rapid Setup Guide
 
 ### 1. Database Initialization
-Run `supabase/setup.sql` in your Supabase SQL Editor. This script is **idempotent** (can be run multiple times safely) and sets up:
-- Vector search extensions.
+Run `supabase/setup.sql` in your Supabase SQL Editor. This script is idempotent and sets up:
 - Tables for `profiles`, `courses`, `embeddings`, and `progress`.
-- **Auth Triggers** for automatic profile creation.
-- Storage buckets and RLS policies.
+- **Database Trigger** for automatic profile creation.
+- RLS Policies and Storage Buckets.
 
-### 2. Environment Configuration
-Create a `.env.local` file with the following:
+### 2. Configuration
+Create a `.env.local` file:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=... # Required for PDF processing
-OPENAI_API_KEY=... # For text-embedding-3-small
-GROQ_API_KEY=... # For high-speed chat
-ADMIN_SECRET=your-secret # For protected APIs
+SUPABASE_SERVICE_ROLE_KEY=... # For PDF processing
+OPENAI_API_KEY=... # For embeddings
+GROQ_API_KEY=... # For AI Chat
+ADMIN_SECRET=... # Secure API access
 ```
 
 ### 3. Launch
@@ -71,9 +69,9 @@ npm run dev
 
 ---
 
-## 📋 Credentials
+## � Credentials
 - **Admin**: `admin@test.com` / `admin123`
-- **Demo Student**: `demo@test.com` / `demo123` (Select "Bac C" or "Bac D" in UI)
+- **Demo Student**: `demo@test.com` / `demo123`
 
 ---
-*Created for the S3C Defi 4 — Baccalaureate Preparation Competition.*
+*Created for the S3C Defi 4 — Elevating Baccalaureate Education through AI.*
