@@ -22,6 +22,7 @@ export default function AdminDashboard() {
     const [title, setTitle] = useState('');
     const [subject, setSubject] = useState('Mathematics');
     const [studentType, setStudentType] = useState<'C' | 'D'>('C');
+    const [file, setFile] = useState<File | null>(null);
 
     const supabase = createClient();
 

@@ -1,5 +1,8 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Bot, Info, User as UserIcon, Send } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 

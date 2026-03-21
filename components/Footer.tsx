@@ -17,7 +17,7 @@ export function Footer() {
                             <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center p-1.5 border border-white/20">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
-                                    src="@public/logo.png"
+                                    src="/logo.png"
                                     alt="PassBac"
                                     className="w-full h-full object-cover rounded-sm"
                                 />
