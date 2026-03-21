@@ -49,7 +49,7 @@ export function Navbar({ locale }: { locale: string }) {
             className={`fixed top-4 left-0 right-0 z-50 px-4 transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0'
                 }`}
         >
-            <nav className="max-w-fit mx-auto glass rounded-full px-4 py-2 shadow-xl border border-white/40 flex items-center gap-6">
+            <nav className="w-full lg:max-w-fit mx-auto glass rounded-full px-3 py-2 sm:px-4 shadow-xl border border-white/40 flex items-center justify-between gap-4 lg:gap-6">
                 {/* Logo Icon Only (Enlarged & Edge-to-Edge) */}
                 <Link href="/dashboard" className="flex-shrink-0 transition-transform active:scale-90">
                     <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-1.5">
@@ -85,16 +85,16 @@ export function Navbar({ locale }: { locale: string }) {
                 <div className="hidden lg:block w-px h-6 bg-gray-200" />
 
                 {/* Right side tools */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                     {/* Minimalist User Avatar */}
-                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold shadow-inner">
+                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 items-center justify-center text-gray-500 text-xs font-bold shadow-inner">
                         {user.email?.charAt(0).toUpperCase()}
                     </div>
 
                     {/* Logout */}
                     <button
                         onClick={signOut}
-                        className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                        className="hidden lg:flex w-10 h-10 items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
                     >
                         <LogOut className="w-4 h-4" />
                     </button>
@@ -111,7 +111,7 @@ export function Navbar({ locale }: { locale: string }) {
 
             {/* Mobile Dropdown Menu */}
             {isMenuOpen && (
-                <div className="lg:hidden mt-3 max-w-sm mx-auto glass rounded-3xl p-4 shadow-2xl border border-white/40 animate-fade-in">
+                <div className="lg:hidden mt-3 w-full max-w-xl mx-auto glass rounded-3xl p-3 sm:p-4 shadow-2xl border border-white/40 origin-top animate-in fade-in slide-in-from-top-4 duration-300">
                     <div className="flex flex-col gap-2">
                         {links.map(({ href, label }) => {
                             const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));

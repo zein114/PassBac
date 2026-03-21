@@ -64,10 +64,10 @@ export default function RegisterPage() {
 
                 <div className="relative z-10">
                     <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-sm">
-                        {t('loginLandingTitle')}
+                        {t('registerLandingTitle')}
                     </h1>
                     <p className="text-white/90 text-lg leading-relaxed max-w-md font-medium">
-                        {t('loginLandingDescription')}
+                        {t('registerLandingDescription')}
                     </p>
                     <div className="flex flex-wrap gap-4 mt-10">
                         {[
