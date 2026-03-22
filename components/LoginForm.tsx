@@ -56,7 +56,7 @@ export default function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             dir="ltr"
                             className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-left"
-                            placeholder="name@example.com"
+                            placeholder={t('emailPlaceholder')}
                         />
                     </div>
                 </div>

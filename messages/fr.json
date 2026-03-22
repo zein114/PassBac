@@ -158,6 +158,7 @@
         "login": "Connexion",
         "register": "Inscription",
         "email": "E-mail",
+        "emailPlaceholder": "nom@exemple.com",
         "password": "Mot de passe",
         "studentType": "Série du Bac",
         "noAccount": "Pas de compte ?",

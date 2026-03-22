@@ -158,6 +158,7 @@
         "login": "Login",
         "register": "Register",
         "email": "Email",
+        "emailPlaceholder": "name@example.com",
         "password": "Password",
         "studentType": "Bac Series",
         "noAccount": "Don't have an account?",

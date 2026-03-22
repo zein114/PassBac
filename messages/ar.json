@@ -158,6 +158,7 @@
         "login": "تسجيل الدخول",
         "register": "تسجيل",
         "email": "البريد الإلكتروني",
+        "emailPlaceholder": "الاسم@example.com",
         "password": "كلمة المرور",
         "studentType": "سلسلة البكالوريا",
         "noAccount": "ليس لديك حساب؟",

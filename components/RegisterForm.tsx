@@ -70,9 +70,6 @@ export default function RegisterForm() {
                                     <GraduationCap className="w-6 h-6" />
                                 </div>
                                 <span className={`font-bold text-lg ${studentType === type ? 'text-gray-900' : 'text-gray-600'}`}>Bac {type}</span>
-                                <span className="text-[10px] text-center font-medium opacity-60 leading-tight px-1">
-                                    {type === 'C' ? t('seriesC') : t('seriesD')}
-                                </span>
                                 {studentType === type && (
                                     <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-indigo-600 border-4 border-white flex items-center justify-center shadow-lg animate-in zoom-in-50 duration-300">
                                         <div className="w-1.5 h-1.5 rounded-full bg-white" />
@@ -98,7 +95,7 @@ export default function RegisterForm() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 dir="ltr"
                                 className="block w-full pl-11 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-left"
-                                placeholder="name@example.com"
+                                placeholder={t('emailPlaceholder')}
                             />
                         </div>
                     </div>
@@ -118,7 +115,7 @@ export default function RegisterForm() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 dir="ltr"
                                 className="block w-full pl-11 pr-12 py-3 bg-gray-50/50 border border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-left"
-                                placeholder="Min. 6 characters"
+                                placeholder="••••••••"
                             />
                             <button
                                 type="button"
