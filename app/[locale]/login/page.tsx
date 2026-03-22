@@ -81,7 +81,10 @@ export default function LoginPage() {
                         ))}
                     </div>
                 </div>
-                <p className="relative z-10 text-white/50 text-sm font-medium">© {new Date().getFullYear()} {tc('title')}. All rights reserved.</p>
+                <div className="relative z-10 flex items-center gap-1 text-white/50 text-sm font-medium" dir="ltr">
+                    <span>© {new Date().getFullYear()} {tc('title')}.</span>
+                    <span dir="auto">{tc('allRightsReserved')}</span>
+                </div>
             </div>
 
             {/* Right panel — form */}

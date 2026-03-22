@@ -115,7 +115,10 @@ export function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="pt-8 border-t border-gray-100 flex items-center justify-center">
-                    <p className="text-sm text-gray-400 font-medium tracking-wide">© {currentYear} PassBac. All rights reserved.</p>
+                    <div className="text-sm text-gray-400 font-medium tracking-wide flex items-center gap-1" dir="ltr">
+                        <span>© {currentYear} PassBac.</span>
+                        <span dir="auto">{t('allRightsReserved')}</span>
+                    </div>
                 </div>
             </div>
         </footer>

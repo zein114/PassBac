@@ -27,7 +27,8 @@
             "mathematics": "الرياضيات",
             "physics": "الفيزياء",
             "science": "العلوم"
-        }
+        },
+        "allRightsReserved": "جميع الحقوق محفوظة."
     },
     "Dashboard": {
         "title": "لوحة قيادة الطالب",

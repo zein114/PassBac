@@ -5,7 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { BookOpen, MessageSquare, Brain, TrendingUp, Sparkles, ChevronRight, Award, Calendar, CheckCircle2, Clock } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface Stats {
     courseCount: number;
@@ -25,6 +25,7 @@ interface Session {
 export default function Dashboard() {
     const t = useTranslations('Dashboard');
     const tc = useTranslations('Common');
+    const locale = useLocale();
     const { user, profile, loading } = useAuth();
     const [stats, setStats] = useState<Stats | null>(null);
     const [todaySessions, setTodaySessions] = useState<Session[]>([]);
@@ -119,7 +120,7 @@ export default function Dashboard() {
                                         <h3 className="text-lg font-bold text-gray-900 mb-1">{card.title}</h3>
                                         <p className="text-sm text-gray-500 flex-grow">{card.description}</p>
                                         <div className="flex items-center gap-1 mt-4 text-indigo-600 text-sm font-medium group-hover:gap-2 transition-all">
-                                            {tc('open')} <ChevronRight className="w-4 h-4" />
+                                            {tc('open')} <ChevronRight className={`w-4 h-4 ${locale === 'ar' ? 'rotate-180' : ''}`} />
                                         </div>
                                     </div>
                                 </Link>

@@ -27,7 +27,8 @@
             "mathematics": "Mathématiques",
             "physics": "Physique",
             "science": "Sciences"
-        }
+        },
+        "allRightsReserved": "Tous droits réservés."
     },
     "Dashboard": {
         "title": "Tableau de Bord Étudiant",

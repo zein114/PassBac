@@ -27,7 +27,8 @@
             "mathematics": "Mathematics",
             "physics": "Physics",
             "science": "Science"
-        }
+        },
+        "allRightsReserved": "All rights reserved."
     },
     "Dashboard": {
         "title": "Student Dashboard",
