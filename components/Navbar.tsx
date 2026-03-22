@@ -52,7 +52,7 @@ export function Navbar({ locale }: { locale: string }) {
             <nav className="w-full lg:max-w-fit mx-auto glass rounded-full px-3 py-2 sm:px-4 shadow-xl border border-white/40 flex items-center justify-between gap-4 lg:gap-6">
                 {/* Logo Icon Only (Enlarged & Edge-to-Edge) */}
                 <Link href="/dashboard" className="flex-shrink-0 transition-transform active:scale-90">
-                    <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-1.5">
+                    <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-2">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src="/logo.png"

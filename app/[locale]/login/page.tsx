@@ -39,7 +39,7 @@ export default function LoginPage() {
             `}</style>
             
             {/* Absolute Language Selector Top Right */}
-            <div className="absolute top-6 right-6 z-50">
+            <div className="absolute top-6 end-6 z-50">
                 <LanguageSelector />
             </div>
 
@@ -50,8 +50,8 @@ export default function LoginPage() {
                 <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000" />
                 <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000" />
 
-                <div className="relative z-10 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/20 p-1.5">
+                <div className="relative z-10 flex items-center gap-4">
+                    <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/20 p-2.5">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src="/logo.png"
@@ -59,7 +59,7 @@ export default function LoginPage() {
                             className="w-full h-full object-cover rounded-full"
                         />
                     </div>
-                    <span className="text-xl font-bold tracking-tight">{tc('title')}</span>
+                    <span className="text-3xl font-bold tracking-tight">{tc('title')}</span>
                 </div>
                 
                 <div className="relative z-10">
@@ -88,11 +88,11 @@ export default function LoginPage() {
             <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 md:px-12 py-12 relative z-10">
                 <div className="w-full max-w-md mx-auto relative pt-12 lg:pt-0">
                     {/* Mobile logo */}
-                    <div className="flex justify-center items-center gap-2 mb-8 lg:hidden">
-                        <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center shadow-md p-1">
+                    <div className="flex justify-center items-center gap-3 mb-8 lg:hidden">
+                        <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-md p-1.5">
                             <img src="/logo.png" alt="Logo" className="w-full h-full object-cover rounded-full" />
                         </div>
-                        <span className="font-extrabold text-2xl text-gray-900 tracking-tight">{tc('title')}</span>
+                        <span className="font-extrabold text-3xl text-gray-900 tracking-tight">{tc('title')}</span>
                     </div>
 
                     <div className="text-center lg:text-left mb-8">

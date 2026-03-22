@@ -47,12 +47,12 @@ export function LanguageSelector() {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2.5 px-3 py-2 bg-white/80 backdrop-blur-md rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="flex items-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-2 bg-white/80 backdrop-blur-md rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
             >
                 <div className="flex items-center justify-center w-6 h-6 rounded-md bg-indigo-50 text-indigo-600">
                     <Globe className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-sm font-semibold text-gray-700 pr-2">
+                <span className="hidden sm:inline font-semibold text-gray-700 sm:pr-2 text-sm pt-0.5">
                     {currentLang.label}
                 </span>
                 <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
@@ -60,7 +60,7 @@ export function LanguageSelector() {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden flex flex-col z-[100] animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute end-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden flex flex-col z-[100] animate-in fade-in zoom-in-95 duration-200">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
