@@ -83,14 +83,16 @@ export default function CoursesPage() {
 
             {/* Filter bar */}
             <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <div className="relative flex-1 group">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
+                        <Search className="w-5 h-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                    </div>
                     <input
                         type="text"
                         placeholder={t('searchPlaceholder')}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="input-modern pl-9 !py-2"
+                        className="block w-full py-3 pe-4 ps-11 text-sm text-gray-900 border-[1.5px] border-gray-200 rounded-2xl bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 hover:border-gray-300 transition-all shadow-sm outline-none"
                     />
                 </div>
                 <div className="flex gap-2 flex-wrap">
@@ -140,7 +142,7 @@ export default function CoursesPage() {
                             </div>
                             <div className="border-t border-gray-100 px-5 py-3 flex justify-between items-center bg-gray-50/50">
                                 <a
-                                    href={`${course.pdf_url}?download=`}
+                                    href={`${course.pdf_url}#toolbar=0`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-sm font-medium text-gray-500 hover:text-gray-900 transition flex items-center gap-1"

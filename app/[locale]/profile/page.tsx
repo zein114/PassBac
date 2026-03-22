@@ -61,7 +61,7 @@ export default function ProfilePage() {
 
             setAvatarUrl(data.publicUrl);
             alert(t('messages.avatarUpdated') || 'Avatar updated!');
-            
+
             // Force reload to update Navbar (hacky but works)
             router.refresh();
 
@@ -96,13 +96,13 @@ export default function ProfilePage() {
         if (!window.confirm(t('messages.deleteConfirm') || 'Are you sure you want to delete your account? This cannot be undone.')) {
             return;
         }
-        
+
         setIsDeleting(true);
         try {
             // Send request to API route to delete user using service_role key
             const res = await fetch('/api/auth/delete-account', { method: 'POST' });
             if (!res.ok) throw new Error('Failed to delete account');
-            
+
             // Sign out on client side
             await supabase.auth.signOut();
             window.location.replace('/login');
@@ -116,7 +116,7 @@ export default function ProfilePage() {
     return (
         <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
             <div className="flex items-center gap-4">
-                <Link href="/dashboard" className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500">
+                <Link href={profile?.is_admin ? "/admin" : "/dashboard"} className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500">
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <h1 className="text-2xl font-bold text-gray-900">{t('title') || 'My Profile'}</h1>
