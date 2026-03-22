@@ -86,7 +86,7 @@ export default function Dashboard() {
                         <div className="flex items-center gap-2 mb-2">
                             <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Bac {profile.student_type}</span>
                         </div>
-                        <h1 className="text-2xl md:text-4xl font-extrabold text-white capitalize">{t('welcome')}, {firstName}!</h1>
+                        <h1 className="text-2xl md:text-4xl font-extrabold text-white capitalize">{t('welcome')}{locale === 'ar' ? '،' : ','} {firstName}!</h1>
                         <p className="text-white/70 mt-2 text-xs md:text-sm max-w-md leading-relaxed">{t('heroDescription')}</p>
                     </div>
                     <Link href="/ai" className="flex-shrink-0 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 transition text-white font-bold px-6 py-4 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg text-sm md:text-base">
@@ -113,7 +113,7 @@ export default function Dashboard() {
                         <h2 className="text-xl font-bold text-gray-900 mb-4">{t('modules.title')}</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             {cards.map((card, i) => (
-                                <Link key={i} href={card.href} className="card-hover group">
+                                <Link key={i} href={card.href} className="card-hover group block rounded-2xl">
                                     <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-6 h-full flex flex-col">
                                         <div className={`w-14 h-14 ${card.bg} rounded-2xl flex items-center justify-center mb-5`}>{card.icon}</div>
                                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full w-fit mb-3 ${card.badgeBg}`}>{card.badge}</span>
