@@ -69,7 +69,6 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=... # For PDF processing
 OPENAI_API_KEY=... # For embeddings
 GROQ_API_KEY=... # For AI Chat
-ADMIN_SECRET=... # Secure API access
 ```
 
 ### 3. Launch
@@ -100,7 +99,6 @@ To deploy PassBac using Docker, follow these steps:
      -e SUPABASE_SERVICE_ROLE_KEY=your_service_role_key \
      -e OPENAI_API_KEY=your_openai_api_key \
      -e GROQ_API_KEY=your_groq_api_key \
-     -e ADMIN_SECRET=your_admin_secret \
      passbac
    ```
 
