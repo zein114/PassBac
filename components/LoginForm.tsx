@@ -31,9 +31,27 @@ export default function LoginForm() {
             setError(error.message);
             setLoading(false);
         } else {
+            // Check admin status for login landing route
+            const { data: { user } } = await supabase.auth.getUser();
+            let dest = '/dashboard';
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('is_admin')
+                    .eq('id', user.id)
+                    .single();
+                if (profile?.is_admin) dest = '/admin';
+            }
+
             // Check for 'next' param in URL
             const searchParams = new URLSearchParams(window.location.search);
-            const next = searchParams.get('next') || '/dashboard';
+            let next = searchParams.get('next') || dest;
+
+            // Override trailing generic dashboard redirects if the user is an admin
+            if (dest === '/admin' && (next === '/dashboard' || next.match(/^\/(fr|ar|en)\/dashboard\/?$/))) {
+                next = '/admin';
+            }
+
             router.refresh();
             router.push(next);
         }

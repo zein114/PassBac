@@ -51,8 +51,8 @@ export async function updateSession(request: NextRequest, response?: NextRespons
         return NextResponse.redirect(url)
     }
 
-    // Role-based protection for /admin
-    if (isAdminRoute) {
+    // Role-based protection for /admin and /dashboard
+    if (isAdminRoute || isDashboardRoute) {
         if (!user) {
             const url = request.nextUrl.clone()
             const redirectTo = url.pathname + url.search
@@ -67,17 +67,29 @@ export async function updateSession(request: NextRequest, response?: NextRespons
             .eq('id', user.id)
             .single()
 
-        if (!profile?.is_admin) {
+        if (isAdminRoute && !profile?.is_admin) {
             const url = request.nextUrl.clone()
             url.pathname = '/dashboard'
             return NextResponse.redirect(url)
         }
+
+        if (isDashboardRoute && profile?.is_admin) {
+            const url = request.nextUrl.clone()
+            url.pathname = '/admin'
+            return NextResponse.redirect(url)
+        }
     }
 
-    // If user is logged in and hits root or auth route, go to dashboard
+    // If user is logged in and hits root or auth route, redirect properly
     if (user && (isRoot || isAuthRoute)) {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', user.id)
+            .single()
+
         const url = request.nextUrl.clone()
-        url.pathname = '/dashboard'
+        url.pathname = profile?.is_admin ? '/admin' : '/dashboard'
         return NextResponse.redirect(url)
     }
 
