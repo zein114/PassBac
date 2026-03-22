@@ -55,20 +55,37 @@ export default function AdminDashboard() {
         setError(null);
         setSuccess(null);
 
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('subject', subject);
-        formData.append('student_type', studentType);
-        formData.append('file', file);
-
         try {
-            const res = await fetch('/api/admin/upload', {
+            // 1. Get Signed URL from server
+            const initRes = await fetch('/api/admin/upload-init', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fileName: file.name }),
+            });
+            const initData = await initRes.json();
+            if (!initRes.ok) throw new Error(initData.error || 'Failed to initialize upload');
+
+            // 2. Upload file directly to Supabase from the browser!
+            const { error: uploadErr } = await supabase.storage
+                .from('courses')
+                .uploadToSignedUrl(initData.path, initData.token, file);
+                
+            if (uploadErr) throw new Error(`Direct upload failed: ${uploadErr.message}`);
+
+            // 3. Complete the upload (insert DB and run RAG)
+            const completeRes = await fetch('/api/admin/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    subject,
+                    student_type: studentType,
+                    path: initData.path
+                }),
             });
 
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Upload failed');
+            const completeData = await completeRes.json();
+            if (!completeRes.ok) throw new Error(completeData.error || 'Failed to complete upload');
 
             setSuccess(t('uploadSuccess'));
             setTitle('');
@@ -245,7 +262,7 @@ export default function AdminDashboard() {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <a
-                                                href={c.pdf_url}
+                                                href={`${c.pdf_url}?download=`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"

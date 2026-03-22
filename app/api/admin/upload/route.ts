@@ -31,73 +31,23 @@ export async function POST(req: Request) {
     }
 
     try {
-        const formData = await req.formData();
-        const title = formData.get('title') as string;
-        const subject = formData.get('subject') as string;
-        const student_type = formData.get('student_type') as string;
-        const file = formData.get('file') as File;
+        const { title, subject, student_type, path } = await req.json();
 
-        if (!title || !subject || !student_type || !file) {
-            return NextResponse.json({ error: 'Missing required fields: title, subject, student_type, file' }, { status: 400 });
+        if (!title || !subject || !student_type || !path) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
         if (student_type !== 'C' && student_type !== 'D') {
             return NextResponse.json({ error: 'student_type must be C or D' }, { status: 400 });
         }
 
-        console.log(`[Admin Upload] Title: ${title}, Type: ${student_type}, File: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
-
+        console.log(`[Admin Upload] Title: ${title}, Type: ${student_type}, Path: ${path}`);
         const supabase = getServiceSupabase();
 
-        // 1. Upload PDF to Supabase Storage with Retry Logic
-        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-        const fileBuffer = await file.arrayBuffer();
+        // The file is already uploaded to Supabase Storage by the client
+        // We just get the public URL for the DB
+        const pdfUrl = supabase.storage.from('courses').getPublicUrl(path).data.publicUrl;
 
-        let uploadErr: any = null;
-        let uploadSuccess = false;
-        const maxRetries = 3;
-
-        console.log(`[Admin Upload] Uploading to Storage: ${fileName}...`);
-
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            try {
-                const { error } = await supabase.storage
-                    .from('courses')
-                    .upload(fileName, fileBuffer, {
-                        contentType: 'application/pdf',
-                        upsert: true
-                    });
-
-                if (error) {
-                    uploadErr = error;
-                    console.warn(`[Admin Upload] Storage Error on attempt ${attempt}:`, error.message || error);
-                    if (attempt < maxRetries) {
-                        console.log(`[Admin Upload] Retrying upload in 2 seconds...`);
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        continue;
-                    }
-                } else {
-                    uploadSuccess = true;
-                    uploadErr = null;
-                    break;
-                }
-            } catch (err: any) {
-                uploadErr = err;
-                console.warn(`[Admin Upload] Network Error on attempt ${attempt}:`, err.message || err);
-                if (attempt < maxRetries) {
-                    console.log(`[Admin Upload] Retrying upload in 2 seconds...`);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                }
-            }
-        }
-
-        if (!uploadSuccess) {
-            console.error('[Admin Upload] Storage Error after all retries:', uploadErr);
-            throw new Error(`Storage upload failed: ${(uploadErr as any)?.message || 'Unknown error'}`);
-        }
-
-        console.log('[Admin Upload] Storage Upload Successful.');
-        const pdfUrl = supabase.storage.from('courses').getPublicUrl(fileName).data.publicUrl;
-
+        console.log('[Admin Upload] Upload successful, inserting to DB...');
         // 2. Insert course into DB
         console.log(`[DEBUG-UPLOAD] Inserting course "${title}" into DB...`);
         const { data: course, error: courseErr } = await supabase
@@ -118,8 +68,16 @@ export async function POST(req: Request) {
         const { processAndStorePDF } = await import('@/lib/rag');
 
         try {
-            const buffer = Buffer.from(await file.arrayBuffer());
-            const extractedText = await extractTextFromPDFBuffer(buffer);
+            // First we need to download the file into memory to parse it
+            const { data: fileBlob, error: downloadErr } = await supabase.storage.from('courses').download(path);
+            if (downloadErr || !fileBlob) {
+                console.warn('[DEBUG-UPLOAD] Failed to download PDF for RAG. It will be skipped.', downloadErr);
+                throw new Error('Could not download pdf for text extraction');
+            }
+
+            const arrayBuffer = await fileBlob.arrayBuffer();
+            const fileBuffer = Buffer.from(arrayBuffer);
+            const extractedText = await extractTextFromPDFBuffer(fileBuffer);
 
             if (extractedText && extractedText.trim().length > 0) {
                 const chunks = chunkText(extractedText, 800, 100);

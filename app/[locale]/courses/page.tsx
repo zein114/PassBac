@@ -74,7 +74,7 @@ export default function CoursesPage() {
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-extrabold text-gray-900">
-                    {t('title', { type: profile?.student_type })}
+                    {t('title', { type: profile?.student_type || 'General' })}
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">
                     {t('description')}
@@ -140,7 +140,7 @@ export default function CoursesPage() {
                             </div>
                             <div className="border-t border-gray-100 px-5 py-3 flex justify-between items-center bg-gray-50/50">
                                 <a
-                                    href={course.pdf_url}
+                                    href={`${course.pdf_url}?download=`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-sm font-medium text-gray-500 hover:text-gray-900 transition flex items-center gap-1"
