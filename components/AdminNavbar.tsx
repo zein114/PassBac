@@ -5,12 +5,12 @@ import { useAuth } from './AuthProvider';
 import { LogOut, Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
-import { AdminNavbar } from './AdminNavbar';
 
-export function Navbar({ locale }: { locale: string }) {
+export function AdminNavbar({ locale }: { locale: string }) {
     const { user, profile, signOut } = useAuth();
     const pathname = usePathname();
     const t = useTranslations('Common');
+    const ta = useTranslations('Admin');
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,18 +31,12 @@ export function Navbar({ locale }: { locale: string }) {
         return () => window.removeEventListener('scroll', controlNavbar);
     }, [lastScrollY]);
 
-    if (!user) return null;
-
-    if (profile?.is_admin) {
-        return <AdminNavbar locale={locale} />;
-    }
+    if (!user || !profile?.is_admin) return null;
 
     const links = [
-        { href: '/dashboard', label: t('dashboard') },
-        { href: '/courses', label: t('courses') },
-        { href: '/ai', label: t('aiTutor') },
-        { href: '/quiz', label: t('quiz') },
-        { href: '/planner', label: t('planner') },
+        { href: '/admin', label: t('dashboard') },
+        { href: '/admin/courses', label: ta('manageContent') },
+        { href: '/admin/users', label: ta('manageUsers') },
     ];
 
     return (
@@ -51,13 +45,13 @@ export function Navbar({ locale }: { locale: string }) {
                 }`}
         >
             <nav className="w-full lg:max-w-fit mx-auto glass rounded-full px-3 py-2 sm:px-4 shadow-xl border border-white/40 flex items-center justify-between gap-4 lg:gap-6">
-                {/* Logo Icon Only (Enlarged & Edge-to-Edge) */}
-                <Link href="/dashboard" className="flex-shrink-0 transition-transform active:scale-90">
-                    <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-2">
+                {/* Logo */}
+                <Link href="/admin" className="flex-shrink-0 transition-transform active:scale-90">
+                    <div className="w-10 h-10 sm:w-16 sm:h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden border border-white/20 p-2 sm:p-2">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src="/logo.png"
-                            alt={t('title')}
+                            alt={ta('portalTitle')}
                             className="w-full h-full object-cover rounded-full"
                         />
                     </div>
@@ -66,14 +60,14 @@ export function Navbar({ locale }: { locale: string }) {
                 {/* Desktop Menu */}
                 <div className="hidden lg:flex items-center gap-1">
                     {links.map(({ href, label }) => {
-                        const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
+                        const isActive = pathname === href || (href !== '/admin' && pathname.startsWith(href));
                         return (
                             <Link
                                 key={href}
                                 href={href}
                                 className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${isActive
-                                    ? 'text-indigo-600 bg-white shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900 hover:bg-white/50'
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'text-gray-700 hover:bg-white/60 hover:text-indigo-600'
                                     }`}
                             >
                                 {label}
@@ -87,7 +81,7 @@ export function Navbar({ locale }: { locale: string }) {
 
                 {/* Right side tools */}
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                    {/* Minimalist User Avatar */}
+                    {/* User Avatar */}
                     <Link href="/profile" className="flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 items-center justify-center text-gray-500 text-xs font-bold shadow-inner overflow-hidden hover:ring-2 ring-indigo-500 transition-all">
                         {profile?.avatar_url ? (
                             <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
@@ -99,14 +93,14 @@ export function Navbar({ locale }: { locale: string }) {
                     {/* Logout */}
                     <button
                         onClick={signOut}
-                        className="hidden lg:flex w-10 h-10 items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                        className="hidden lg:flex w-10 h-10 items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
                     >
                         <LogOut className="w-4 h-4" />
                     </button>
 
                     {/* Mobile Toggle */}
                     <button
-                        className="lg:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                        className="lg:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-white/60 rounded-full transition-colors"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                         {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -119,7 +113,7 @@ export function Navbar({ locale }: { locale: string }) {
                 <div className="lg:hidden mt-3 w-full max-w-xl mx-auto glass rounded-3xl p-3 sm:p-4 shadow-2xl border border-white/40 origin-top animate-in fade-in slide-in-from-top-4 duration-300">
                     <div className="flex flex-col gap-2">
                         {links.map(({ href, label }) => {
-                            const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
+                            const isActive = pathname === href || (href !== '/admin' && pathname.startsWith(href));
                             return (
                                 <Link
                                     key={href}
@@ -127,7 +121,7 @@ export function Navbar({ locale }: { locale: string }) {
                                     onClick={() => setIsMenuOpen(false)}
                                     className={`px-4 py-3 rounded-2xl text-sm font-bold flex items-center justify-between transition-all ${isActive
                                         ? 'bg-indigo-600 text-white'
-                                        : 'text-gray-600 hover:bg-white/60'
+                                        : 'text-gray-700 hover:bg-white/60'
                                         }`}
                                 >
                                     <span>{label}</span>
