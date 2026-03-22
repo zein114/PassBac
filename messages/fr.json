@@ -187,5 +187,24 @@
     "Metadata": {
         "title": "PassBac — Préparation aux Examens par l'IA",
         "description": "Réussissez votre Baccalauréat avec l'apprentissage propulsé par l'IA, des cours et des quiz."
+    },
+    "Profile": {
+        "title": "Mon Profil",
+        "email": "Adresse de courriel",
+        "changePhoto": "Changer la photo",
+        "fullName": "Nom Complet",
+        "fullNamePlaceholder": "Entrez votre nom complet",
+        "saveChanges": "Enregistrer les modifications",
+        "dangerZone": "Zone de Danger",
+        "deleteWarning": "Une fois votre compte supprimé, il n'y a pas de retour possible. Soyez certain de votre choix.",
+        "deleteAccount": "Supprimer le profil",
+        "errors": {
+            "uploadFailed": "Échec du téléchargement."
+        },
+        "messages": {
+            "avatarUpdated": "Avatar mis à jour !",
+            "profileSaved": "Profil enregistré avec succès !",
+            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible."
+        }
     }
 }

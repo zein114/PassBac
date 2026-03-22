@@ -187,5 +187,24 @@
     "Metadata": {
         "title": "PassBac — AI-Powered Exam Preparation",
         "description": "Ace your Baccalaureate with AI-powered learning, courses, and quizzes."
+    },
+    "Profile": {
+        "title": "My Profile",
+        "email": "Email Address",
+        "changePhoto": "Change Photo",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter your full name",
+        "saveChanges": "Save Changes",
+        "dangerZone": "Danger Zone",
+        "deleteWarning": "Once you delete your account, there is no going back. Please be certain.",
+        "deleteAccount": "Delete Account",
+        "errors": {
+            "uploadFailed": "Upload failed."
+        },
+        "messages": {
+            "avatarUpdated": "Avatar updated!",
+            "profileSaved": "Profile saved successfully!",
+            "deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone."
+        }
     }
 }

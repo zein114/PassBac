@@ -10,6 +10,8 @@ export interface Profile {
     email: string;
     student_type: 'C' | 'D' | null;
     is_admin: boolean;
+    full_name?: string | null;
+    avatar_url?: string | null;
 }
 
 interface AuthContextType {
