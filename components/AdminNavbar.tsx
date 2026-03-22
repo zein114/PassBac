@@ -34,7 +34,7 @@ export function AdminNavbar({ locale }: { locale: string }) {
     if (!user || !profile?.is_admin) return null;
 
     const links = [
-        { href: '/admin', label: t('dashboard') },
+        { href: '/admin', label: ta('overviewTitle') },
         { href: '/admin/courses', label: ta('manageContent') },
         { href: '/admin/users', label: ta('manageUsers') },
     ];
