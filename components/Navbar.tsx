@@ -87,7 +87,7 @@ export function Navbar({ locale }: { locale: string }) {
                 {/* Right side tools */}
                 <div className="flex items-center gap-1.5 sm:gap-2">
                     {/* Minimalist User Avatar */}
-                    <Link href="/profile" className="hidden sm:flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 items-center justify-center text-gray-500 text-xs font-bold shadow-inner overflow-hidden hover:ring-2 ring-indigo-500 transition-all">
+                    <Link href="/profile" className="flex w-10 h-10 rounded-full bg-gray-100 border border-gray-200 items-center justify-center text-gray-500 text-xs font-bold shadow-inner overflow-hidden hover:ring-2 ring-indigo-500 transition-all">
                         {profile?.avatar_url ? (
                             <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                         ) : (

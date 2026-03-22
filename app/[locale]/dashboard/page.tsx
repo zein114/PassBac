@@ -59,7 +59,7 @@ export default function Dashboard() {
     );
     if (!user || !profile) return null;
 
-    const firstName = user.email?.split('@')[0] ?? 'Student';
+    const firstName = profile.full_name || user.email?.split('@')[0] || 'Student';
     const successRate = stats && stats.totalQuestions > 0
         ? Math.round((stats.correctAnswers / stats.totalQuestions) * 100) : 0;
 
