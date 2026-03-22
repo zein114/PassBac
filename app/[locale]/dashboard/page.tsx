@@ -99,7 +99,7 @@ export default function Dashboard() {
                     {/* Stats */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         {statCards.map((s, i) => (
-                            <div key={i} className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-sm">
+                            <div key={i} className="card-hover bg-white rounded-2xl border border-gray-200/80 p-4 shadow-sm">
                                 <div className={`${s.bg} w-10 h-10 rounded-xl flex items-center justify-center mb-3`}>{s.icon}</div>
                                 <p className="text-xl font-extrabold text-gray-900">{s.value}</p>
                                 <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">{s.label}</p>
@@ -134,11 +134,11 @@ export default function Dashboard() {
                         <Calendar className="w-5 h-5 text-indigo-600" />
                         {t('todaySchedule')}
                     </h2>
-                    <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 space-y-4">
+                    <div className="card-hover bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 space-y-4">
                         {todaySessions.length === 0 ? (
                             <div className="text-center py-6">
                                 <p className="text-sm text-gray-500 mb-4">{t('noSessions')}</p>
-                                <Link href="/planner" className="inline-block px-4 py-2 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-xl hover:bg-indigo-100 transition-colors">
+                                <Link href="/planner" role="button" className="inline-block px-4 py-2 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-xl hover:bg-indigo-100 transition-colors">
                                     {t('openPlanner')}
                                 </Link>
                             </div>

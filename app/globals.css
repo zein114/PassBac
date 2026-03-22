@@ -90,15 +90,26 @@ h6 {
 }
 
 /* Card hover effect */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px border-transparent;
+.card-hover,
+button,
+a[role="button"] {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
 }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
-  border-color: rgba(99, 102, 241, 0.2);
+.card-hover:hover,
+button:hover:not(:disabled),
+a[role="button"]:hover {
+  transform: scale(1.03) translateY(-2px) !important;
+  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.3), 0 0 20px 2px rgba(99, 102, 241, 0.15) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+.card-hover:active,
+button:active:not(:disabled),
+a[role="button"]:active {
+  transform: scale(0.98) translateY(0) !important;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2) !important;
 }
 
 /* Input focus ring */
@@ -118,6 +129,14 @@ h6 {
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
+/* Base button disabled state */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 /* Button primary */
 .btn-primary {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -129,27 +148,11 @@ h6 {
   font-weight: 600;
   cursor: pointer;
   width: 100%;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.01em;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4338ca, #6d28d9);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Button secondary */
@@ -162,13 +165,6 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
 }
 
 /* Animations */
